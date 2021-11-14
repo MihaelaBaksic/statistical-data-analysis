@@ -1,0 +1,28 @@
+---
+title: "Big Five – velikih pet dimenzija ličnosti"
+author: "Filip Grebenar, David Konjevod, Lovre Mitrović, Mihaela Bakšić"
+subtitle: Projekt iz predmeta Statistička analiza podataka
+output:
+  html_document:
+    df_print: paged
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+
+bigfive = read.csv("./big_five_scores.csv")
+head(bigfive)
+
+```
+
+
+```{r}
+
+
+
+```
