@@ -42,4 +42,6 @@ vignettes/*.pdf
 # Knits
 
 *.html
+*.tex
+*.log
 
