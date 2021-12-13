@@ -100,3 +100,98 @@ t.test(old_subjects$openness_score, young_subjects$openness_score, alt = "two.si
 
 ```
 p-vrijednost je manja od 0.05, stoga se hipoteza \( H_0: \mu_{old} = \mu_{young} \) odbacuje u korist alternativne hipoteze \(H_1: \mu_{old} \neq \mu_{young}  \)
+
+
+#Savjesnost između regija
+U ovom dijelu bavimo se pitanjem imaju li neke regije značajno različite rezultate u određenom faktoru. Primjerice je li opravdan mit o visokoj savjesnosti populacije istočne Azije naspram populacije drugih kontinenata.
+
+Regije sam podijelio na osnovu UN-ove podjele (izvor:"https://unstats.un.org/sdgs/indicators/regional-groups/").
+
+```{r}
+
+region_east_asian =c('Brunei','Cambodia','China','Hong Kong','Indonesia','Japan','Macau', 'Malaysia', 'Mongolia','Burma(Myan','North Kore', 'Philippine','Singapore','South Kore','Burma', 'Thailand','Vietnam', 'Taiwan','Borneo')
+
+east_asia = bigfive[bigfive$country == region_east_asian,]
+
+rest_regions = bigfive[bigfive$country != region_east_asian,]
+```
+
+```{r}
+summary(bigfive$conscientiousness_score)
+summary(east_asia$conscientiousness_score)
+summary(rest_regions$conscientiousness_score)
+
+cat('Varijanca savjesnosti za istočnu aziju ', var(east_asia$conscientiousness_score), '\n')
+cat('Varijanca savjesnosti za ostatak svijeta ', var(rest_regions$conscientiousness_score), '\n')
+
+boxplot(east_asia$conscientiousness_score, rest_regions$conscientiousness_score, 
+        names = c('Istočna Azija\ savjesnost','Ostatak svijeta\' savjesnost'),
+        main='Boxplot za istočnu Aziju i ostatak svijeta\' savjesnost')
+
+
+hist(bigfive$conscientiousness_score,main='Savjesnost histogram',xlab='Value',ylab='Frequency', breaks=100)
+
+```
+
+```{r}
+
+hist(east_asia$conscientiousness_score,main='Histogram savjesnosti istočne Azije',xlab='Value',ylab='Frequency', breaks=100)
+hist(rest_regions$conscientiousness_score,main='Histogram savjesnosti ostatka svijeta',xlab='Value',ylab='Frequency', breaks=100)
+
+qqnorm(east_asia$conscientiousness_score, pch = 1, frame = FALSE,main='Istočna Azija')
+qqline(east_asia$conscientiousness_score, col = "steelblue", lwd = 2)
+
+qqnorm(rest_regions$conscientiousness_score, pch = 1, frame = FALSE,main='Ostatak svijeta')
+qqline(rest_regions$conscientiousness_score, col = "steelblue", lwd = 2)
+
+```
+Već iz priloženih grafova mogu naslutiti da su obje distribucije normalne, da je rasipanje veće kod populacije istočne Azije nego u ostatku svijeta (pretpostavljam da je to najviše zbog činjenice da je set podataka za ostatak svijeta mnogo veći) te suprotno početnom pitanju izgleda da je savjesnost ispitanika istočne Azije manja nego u ostatku svijeta.
+
+#Testiranje normalnosti distribucije savjesnosti
+
+Hipoteze:
+
+H_0: distribucija east_asia$conscientiousness_score pripada eksponencijalnoj razdiobi
+H_1: distribucija east_asia$conscientiousness_score NE pripada eksponencijalnoj razdiobi
+
+```{r}
+lillie.test(east_asia$conscientiousness_score)
+```
+Odbacujem nultu hipotezu u korist alternative da se savjesnost ispitanaika istočne Azije ravna po normalnoj distribuciji.
+
+Hipoteze:
+
+H_0: distribucija rest_regions$conscientiousness_score pripada eksponencijalnoj razdiobi
+H_1: distribucija rest_regions$conscientiousness_score NE pripada eksponencijalnoj razdiobi
+
+```{r}
+lillie.test(rest_regions$conscientiousness_score)
+```
+Odbacujem nultu hipotezu u korist alternative da se savjesnost ispitanika iz ostalih regija ravna po normalnoj distibuciji.
+
+#Testiranje jednakosti varijance savjesnosti
+
+Pretpostavljam nezavisnost uzoraka i izvodim F test.
+
+Hipoteze:
+
+$$H_0: \sigma^2_{east Asia} = \sigma^2_{rest}  \\ H_1: \sigma^2_{east Asia} \neq \sigma^2_{rest}  $$
+```{r}
+var.test(east_asia$conscientiousness_score, rest_regions$conscientiousness_score)
+```
+Na osnovu male p vrijednosti odbacujem nultu hipotezu u korist alternative da su varijance distribucije različite
+
+
+#Testiranje jednakosti razine savjesnosti
+
+Koristim T test i pretpostavljam nezavisnost varijabli i različitost varijanci.
+
+Hipoteze:
+
+$$H_0: \mu_{eastAsia} = \mu_{rest}  \\ H_1: \mu_{eastAsia} > \mu_{rest}  $$
+
+```{r}
+t.test(east_asia$conscientiousness_score,rest_regions$conscientiousness_score, alt = "greater", var.equal = FALSE)
+
+```
+Uz veliku p vrijednost nisam uspio odbaciti nultu hipotezu i zaključujem nije opravdan mit o visokoj savjesnosti populacije istočne Azije.
