@@ -62,7 +62,7 @@ qqline(young_subjects$openness_score, col = "steelblue", lwd = 2)
 ```
 
 
-# Testiranje normalnosti - Lillieforsova inačica Koglomorov-Smirnovljevog testa
+# Testiranje normalnosti - Lillieforsova inačica Kolmogomorov-Smirnovljevog testa
 
 
 Testiranje normalnosti otvorenosti za starije ispitanike
