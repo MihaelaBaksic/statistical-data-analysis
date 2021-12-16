@@ -20,6 +20,12 @@ bigfive = read.csv("./big_five_scores.csv")
 head(bigfive)
 
 ```
+```{r}
+View(bigfive)
+```
+```{r}
+summary(bigfive)
+```
 
 
 
@@ -195,3 +201,105 @@ t.test(east_asia$conscientiousness_score,rest_regions$conscientiousness_score, a
 
 ```
 Uz veliku p vrijednost nisam uspio odbaciti nultu hipotezu i zaključujem nije opravdan mit o visokoj savjesnosti populacije istočne Azije.
+
+
+
+####karakteristike prema spolu ispitanika
+##1=male, 2=female
+##članak na ovu temu(https://www.frontiersin.org/articles/10.3389/fpsyg.2011.00178/full)
+
+Neuroticism
+Neuroticism describes the tendency to experience negative emotion and related processes in response to perceived threat and punishment; these include anxiety, depression, anger, self-consciousness, and emotional lability. Women have been found to score higher than men on Neuroticism as measured at the Big Five trait level, as well as on most facets of Neuroticism included in a common measure of the Big Five, the NEO-PI-R (Costa et al., 2001). Additionally, women also score higher than men on related measures not designed specifically to measure the Big Five, such as indices of anxiety (Feingold, 1994) and low self-esteem (Kling et al., 1999). The one facet of Neuroticism in which women do not always exhibit higher scores than men is Anger, or Angry Hostility (Costa et al., 2001)
+
+```{r}
+male_subjects = bigfive[bigfive$sex == 1 ,]
+female_subjects = bigfive[bigfive$sex == 2 ,]
+```
+
+```{r}
+cat('Srednja vrijednost neurocizma  za pripadnice ženskog spola je ', mean(female_subjects$neuroticism_score), '\n')
+cat('Srednja vrijednost otvorenosti za pripadnike muškog spola je ', mean(male_subjects$neuroticism_score), '\n')
+cat('Varijanca vrijednost neurocizma  za pripadnice ženskog spola je ', var(female_subjects$neuroticism_score), '\n')
+cat('Varijanca vrijednost otvorenosti za pripadnike muškog spola je ', var(male_subjects$neuroticism_score), '\n')
+```
+```{r}
+
+boxplot(male_subjects$neuroticism_score, female_subjects$neuroticism_score, 
+        names = c('Male subjects\' neuroticism score','Female subjects\' neuroticism score'),
+        main='Boxplot of male and female subjects\' neuroticism_score')
+
+```
+
+
+Na ovom skupo podataka možemo uočiti razliku u srednjoj vrijednosti neurocizma između pripadnika ženskog i muškog spola. Stoga postoje indikacije da bi neuroticism_score trebao biti viši kod žena nego muškaraca.
+
+Sljedeći korak je provjeriti normalnost podataka koju najčešće provjeravamo: histgoramom, qq-plotom te KS-testom (kojim provjeravamo pripadnost podataka distribuciji).
+
+```{r, fig.width = 14, fig.height=5}
+hist(male_subjects$neuroticism_score,main='Male neuroticsm score histogram', xlab='value', ylab='Frequency')
+hist(female_subjects$neuroticism_score,main='Female neuroticsm score histogram', xlab='value', ylab='Frequency')
+```
+
+Histogrami upućuju na normalnost podataka. Normalnost možemo još provjeriti i qqplot-ovima ili testom koji ispituje normalnost.
+
+```{r}
+qqnorm(male_subjects$neuroticism_score, pch = 1, frame = FALSE,main='Male subjects')
+qqline(male_subjects$neuroticism_score, col = "steelblue", lwd = 2)
+
+qqnorm(female_subjects$neuroticism_score, pch = 1, frame = FALSE,main='Female subjects')
+qqline(female_subjects$neuroticism_score, col = "steelblue", lwd = 2)
+```
+
+
+```{r}
+var(male_subjects$neuroticism_score)
+var(female_subjects$neuroticism_score)
+```
+#Testiranje normalnosti distribucije neuroitcizma
+
+Hipoteze:
+
+H_0: distribucija male_subjects$neuroticism_score pripada eksponencijalnoj razdiobi
+H_1: distribucija male_subjects$neuroticism_score NE pripada eksponencijalnoj razdiobi
+
+```{r}
+lillie.test(male_subjects$neuroticism_score)
+```
+Odbacujem nultu hipotezu u korist alternative da se neuroticizam muških ispitanaika ravna po normalnoj distribuciji.
+
+Hipoteze:
+
+H_0: distribucija female_subjects$neuroticism_score pripada eksponencijalnoj razdiobi
+H_1: distribucija female_subjects$neuroticism_score NE pripada eksponencijalnoj razdiobi
+
+```{r}
+lillie.test(female_subjects$neuroticism_score)
+```
+Odbacujem nultu hipotezu u korist alternative da se neuroticizam ženskih ispitanica ravna po normalnoj distibuciji.
+
+
+#Testiranje jednakosti varijance neuroticizma
+
+Pretpostavljam nezavisnost uzoraka i izvodim F test.
+
+Hipoteze:
+
+$$H_0: \sigma^2_{Male} = \sigma^2_{Female}  \\ H_1: \sigma^2_{Male} \neq \sigma^2_{Female}  $$
+```{r}
+var.test(male_subjects$neuroticism_score, female_subjects$neuroticism_score)
+```
+Na osnovu male p vrijednosti odbacujem nultu hipotezu u korist alternative da su varijance distribucije različite
+
+#Testiranje jednakosti razine savjesnosti
+
+Koristim T test i pretpostavljam nezavisnost varijabli i različitost varijanci.
+
+Hipoteze:
+
+$$H_0: \mu_{Female} = \mu_{Male}  \\ H_1: \mu_{Female} > \mu_{male}  $$
+
+```{r}
+t.test(female_subjects$neuroticism_score ,male_subjects$neuroticism_score, alt = "greater", var.equal = FALSE)
+
+```
+p-vrijednost je manja od 0.05, stoga se hipoteza \( H_0: \mu_{Female} = \mu_{Male} \) odbacuje u korist alternativne hipoteze \(H_1: \mu_{female} > \mu_{Male}  \)
