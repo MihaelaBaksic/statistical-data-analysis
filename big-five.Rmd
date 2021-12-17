@@ -157,8 +157,8 @@ Već iz priloženih grafova mogu naslutiti da su obje distribucije normalne, da 
 
 Hipoteze:
 
-H_0: distribucija east_asia$conscientiousness_score pripada eksponencijalnoj razdiobi
-H_1: distribucija east_asia$conscientiousness_score NE pripada eksponencijalnoj razdiobi
+H_0: distribucija east_asia$conscientiousness_score pripada normalnoj razdiobi
+H_1: distribucija east_asia$conscientiousness_score NE pripada normalnoj razdiobi
 
 ```{r}
 lillie.test(east_asia$conscientiousness_score)
@@ -167,8 +167,8 @@ Odbacujem nultu hipotezu u korist alternative da se savjesnost ispitanaika isto�
 
 Hipoteze:
 
-H_0: distribucija rest_regions$conscientiousness_score pripada eksponencijalnoj razdiobi
-H_1: distribucija rest_regions$conscientiousness_score NE pripada eksponencijalnoj razdiobi
+H_0: distribucija rest_regions$conscientiousness_score pripada normalnoj razdiobi
+H_1: distribucija rest_regions$conscientiousness_score NE pripada normalnoj razdiobi
 
 ```{r}
 lillie.test(rest_regions$conscientiousness_score)
@@ -259,8 +259,8 @@ var(female_subjects$neuroticism_score)
 
 Hipoteze:
 
-H_0: distribucija male_subjects$neuroticism_score pripada eksponencijalnoj razdiobi
-H_1: distribucija male_subjects$neuroticism_score NE pripada eksponencijalnoj razdiobi
+H_0: distribucija male_subjects$neuroticism_score pripada normalnoj razdiobi
+H_1: distribucija male_subjects$neuroticism_score NE pripada normalnoj razdiobi
 
 ```{r}
 lillie.test(male_subjects$neuroticism_score)
@@ -269,8 +269,8 @@ Odbacujem nultu hipotezu u korist alternative da se neuroticizam muških ispitan
 
 Hipoteze:
 
-H_0: distribucija female_subjects$neuroticism_score pripada eksponencijalnoj razdiobi
-H_1: distribucija female_subjects$neuroticism_score NE pripada eksponencijalnoj razdiobi
+H_0: distribucija female_subjects$neuroticism_score pripada normalnoj razdiobi
+H_1: distribucija female_subjects$neuroticism_score NE pripada normalnoj razdiobi
 
 ```{r}
 lillie.test(female_subjects$neuroticism_score)
