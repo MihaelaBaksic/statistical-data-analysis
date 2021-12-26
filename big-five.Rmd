@@ -1,7 +1,7 @@
 ---
 title: "Big Five – velikih pet dimenzija ličnosti"
 author: "Filip Grebenar, David Konjevod, Lovre Mitrović, Mihaela Bakšić"
-subtitle: Projekt iz predmeta Statistička analiza podataka
+subtitle: Projekt iz predmeta Statistička analiza podataka, Fakultet elektrotehnike i računarstva
 output:
   html_document:
     df_print: paged
@@ -13,6 +13,10 @@ knitr::opts_chunk$set(echo = TRUE)
 library(nortest)
 ```
 
+
+# Uvod
+
+// TODO
 
 ```{r}
 
@@ -30,6 +34,8 @@ summary(bigfive)
 
 
 ## Testiranje razlika u otvorenosti kod mladih i starih ispitanika
+
+Često je prisutna pretpostavka kako su mladi ljudi otvoreniji novim iskustvima od starih. Stoga, provest će se testiranje te pretpostavke. Mladim ljudima smatrat će se svi stari 30 ili manje godina, dok će se starim ljudima smatrati oni stari 60 ili više godina.
 
 ```{r}
 
@@ -66,7 +72,7 @@ qqnorm(young_subjects$openness_score, pch = 1, frame = FALSE,main='Younger subje
 qqline(young_subjects$openness_score, col = "steelblue", lwd = 2)
 
 ```
-
+Iz histograma i qq-plotova za openness_score mladih i starih ispitanika može se naslutiti kako podaci pripadaju normalnoj razdiobi. Ta pretpostavka pokušat će se dodatno potvrditi provođenjem Lillieforsove inačice Kolmogorov-Smirnovljevog testa. Za sve testove koristi se razina značajnosti \(\alpha = 0.05\).
 
 # Testiranje normalnosti - Lillieforsova inačica Kolmogomorov-Smirnovljevog testa
 
@@ -74,12 +80,17 @@ qqline(young_subjects$openness_score, col = "steelblue", lwd = 2)
 Testiranje normalnosti otvorenosti za starije ispitanike
 ```{r}
 lillie.test(old_subjects$openness_score)
+
 ```
+S obzirom da je p-vrijednost = 0.000517 < \(\alpha\), nulta hipoteza o pripadnosti podataka o otvorenosti starih ispitanika normalnoj raspodjeli se odbacije u korist alternativne hipoteze.
 
 Testiranje normalnosti faktora otvorenosti za mlađe ispitanike
 ```{r}
 lillie.test(young_subjects$openness_score)
 ```
+
+S obzirom da je p-vrijednost < 2.2e-16 < \(\alpha\), nulta hipoteza o pripadnosti podataka o otvorenosti mladih ispitanika normalnoj raspodjeli se odbacije u korist alternativne hipoteze.
+
 
 # Testiranje jednakosti varijanci otvorenosti za stare i mlade ispitanike
 
@@ -91,11 +102,14 @@ $$H_0: \sigma^2_{old} = \sigma^2_{young}  \\ H_1: \sigma^2_{old} \neq \sigma^2_{
 ```{r}
 var.test(old_subjects$openness_score, young_subjects$openness_score)
 ```
-S obzirom da je p-vrijednost = ____ odbacujemo hipotezu \(H_0 : \sigma^2_{old} = \sigma^2_{young} \) u korist alternativne hipoteze \( H_1: \sigma^2_{old} \neq \sigma^2_{young} \). Zaključujemo da podatci govore u prilog alternativnoj hipotezi i u testovima koji slijede koristit će se informacija o nejednakosti varijanci dobivena ovim testom.
+S obzirom da je p-vrijednost =  2.084e-06 < \(alpha\)odbacujemo hipotezu \(H_0 : \sigma^2_{old} = \sigma^2_{young} \) u korist alternativne hipoteze \( H_1: \sigma^2_{old} \neq \sigma^2_{young} \). Zaključujemo da podatci govore u prilog alternativnoj hipotezi i u testovima koji slijede koristit će se informacija o nejednakosti varijanci dobivena ovim testom.
 
 # Testiranje jednakosti srednjih vrijednosti otvorenosti za stare i mlade ispitanike
 
-Testiranje jednakosti srednjih vrijednosti otvorenosti za stare i mlade ispitanike provodi se kao T test za podatke s različitim varijancama. Pretpostavlja se nezavisnost uzoraka.
+Testiranje jednakosti srednjih vrijednosti T testom zahtjeva da podaci dolaze iz normalne razdiobe. Prethodno provedenim Lillieforsovim testom normalnosti pokazalo se da to ne vrijedi niti za podatke o otvorenosti mladih niti starih ispitanika. Ipak, s obzirom da histogrami i qq-plot grafovi govore u prilog normalnosti. Uzevši u obzir oblik grafova i veliku osjetljivost Lillieforstovog testa normalnosti, možemo nastaviti testiranje uz pretpostavku normalnosti podataka.
+
+
+Testiranje jednakosti srednjih vrijednosti otvorenosti za stare i mlade ispitanike provodi se kao T test za podatke s različitim varijancama, kako je pokazano prethodnim testom. Pretpostavlja se nezavisnost uzoraka.
 
 Hipoteze:
 
@@ -105,10 +119,16 @@ $$H_0: \mu_{old} = \mu_{young}  \\ H_1: \mu_{old} \neq \mu_{young}  $$
 t.test(old_subjects$openness_score, young_subjects$openness_score, alt = "two.sided", var.equal = FALSE)
 
 ```
-p-vrijednost je manja od 0.05, stoga se hipoteza \( H_0: \mu_{old} = \mu_{young} \) odbacuje u korist alternativne hipoteze \(H_1: \mu_{old} \neq \mu_{young}  \)
+p-vrijednost = 0.00163 < \(\alpha\), stoga se hipoteza \( H_0: \mu_{old} = \mu_{young} \) odbacuje u korist alternativne hipoteze \(H_1: \mu_{old} \neq \mu_{young}\). 
+
+
+Statističkim testiranjem pokazano je kako postoji statistički značajna razlika između srednjih vrijednosti otvorenosti mladih i starih ispitanika.
+
+
 
 
 #Savjesnost između regija
+
 U ovom dijelu bavimo se pitanjem imaju li neke regije značajno različite rezultate u određenom faktoru. Primjerice je li opravdan mit o visokoj savjesnosti populacije istočne Azije naspram populacije drugih kontinenata.
 
 Regije sam podijelio na osnovu UN-ove podjele (izvor:"https://unstats.un.org/sdgs/indicators/regional-groups/").
