@@ -183,7 +183,7 @@ H_1: distribucija east_asia$conscientiousness_score NE pripada normalnoj razdiob
 ```{r}
 lillie.test(east_asia$conscientiousness_score)
 ```
-Odbacujem nultu hipotezu u korist alternative da se savjesnost ispitanaika istočne Azije ravna po normalnoj distribuciji.
+Odbacujem nultu hipotezu u korist alternative da se savjesnost ispitanaika istočne Azije ne ravna po normalnoj distribuciji.
 
 Hipoteze:
 
@@ -193,7 +193,9 @@ H_1: distribucija rest_regions$conscientiousness_score NE pripada normalnoj razd
 ```{r}
 lillie.test(rest_regions$conscientiousness_score)
 ```
-Odbacujem nultu hipotezu u korist alternative da se savjesnost ispitanika iz ostalih regija ravna po normalnoj distibuciji.
+Odbacujem nultu hipotezu u korist alternative da se savjesnost ispitanika iz ostalih regija ne ravna po normalnoj distibuciji.
+
+Uzevši u obzir preveliku osjetljivost ovog testa i činjenicu da je iz histograma vidljiva normalnost u nastavku pretpostavljam normalnost za obje populacije.
 
 #Testiranje jednakosti varijance savjesnosti
 
@@ -210,7 +212,7 @@ Na osnovu male p vrijednosti odbacujem nultu hipotezu u korist alternative da su
 
 #Testiranje jednakosti razine savjesnosti
 
-Koristim T test i pretpostavljam nezavisnost varijabli i različitost varijanci.
+Koristim T test i pretpostavljam nezavisnost varijabli i različitost varijanci te normalnu razdiobu.
 
 Hipoteze:
 
