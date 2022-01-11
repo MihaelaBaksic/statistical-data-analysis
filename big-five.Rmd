@@ -126,6 +126,46 @@ Statističkim testiranjem pokazano je kako postoji statistički značajna razlik
 
 
 
+## Model linearne regresije za modeliranja odnosa godina i otvorenosti kod ispitanika
+
+
+S obzirom na činjenicu da smo prethodnim testovima pokazali da je razlika između srednjih vrijednosti otvorenosti za mlade i stare ispitanike statistički značajna, vrijedilo bi se pozabaviti pitanjem odnosa između varijabli godina (age) i otvorenosti (openness_score). Za modeliranje ovisnosti koristi se model linearne regresije. Kako bi se dobio dojam o mogućoj zavisnosti varijable koja ocjenjuje otvorenost ispitanika i njihovih godina, prikazan je grafički prikaz u obliku scatter-plota.
+
+```{r}
+plot(bigfive$age,bigfive$openness_score)
+```
+Ipak, na temelju izgleda grafa moglo bi se zaključiti da veza između varijabli ne postoji ili nije statistički značajna. Kako bi se moglo preciznije diskutirati o tom pitanju, nastavit će se s modeliranjem njihvog odnosa modelom linearne regresije i provođenjem testova nad modelom, unatoč sugestiji grafičkog prikaza da je korelacija između varijabli vrlo slaba. Na temelju ocjene sposobnosti modela linearne regresije da modelira prikupljene podatke, ocjenit će se i njihova linearna zavisnost. Izlazna varijabla u modelu je openness_score, dok je varijabla age regresor. S obzirom da je priutan samo jedan regresor, koristi se jednostavna linearna regresija.
+
+```{r}
+
+model_os = lm(openness_score~age,data=bigfive)
+
+plot(bigfive$age,bigfive$openness_score)
+lines(bigfive$openness_score, model_os$fitted.values, col='red')
+
+```
+
+### Provjera pretpostavki modela
+
+Prije svega treba provjeriti pretpostavke modela. Prva pretpostavka modela linearne regresije je da su reziduali normalno distribuirani i imaju homogenu varijancu. S obzirom da je korišten model jednostavne regresije, nije potrebno baviti se pretpostavkom o slaboj međusobnoj koreliranosti regresora.
+
+```{r}
+
+hist(model_os$residuals, breaks = 100)
+
+```
+Histogram reziduala je vrlo obečavajuć te snažno podupire pretpostavku o normalnosti reziduala. Ipak, potrebno je provesti i Lillieforsovu inačicu KS testa kako bi se normalnost insinuirana histogramom potvrdila.
+
+```{r}
+
+lillie.test(rstandard(model_os))
+
+```
+S obzirom da je p-vrijednost < \(\alpha\), nulta hipoteza o normalnosti standardiziranih reziduala se odbija u korist alternativnoj hipotezi. S obzirom na osjetljivost Lillieforsovog testa, izgled histograma i robusnost T-testa, ipak se može govoriti o dovoljnoj normalnosti reziduala za daljnja testiranja.
+
+
+
+
 
 #Savjesnost između regija
 
