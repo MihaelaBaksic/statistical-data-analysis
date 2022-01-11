@@ -138,10 +138,10 @@ Ipak, na temelju izgleda grafa moglo bi se zaključiti da veza između varijabli
 
 ```{r}
 
-model_os = lm(openness_score~age,data=bigfive)
+selected.model = lm(openness_score~age,data=bigfive)
 
 plot(bigfive$age,bigfive$openness_score)
-lines(bigfive$openness_score, model_os$fitted.values, col='red')
+lines(bigfive$openness_score, selected.model$fitted.values, col='red')
 
 ```
 
@@ -151,20 +151,30 @@ Prije svega treba provjeriti pretpostavke modela. Prva pretpostavka modela linea
 
 ```{r}
 
-hist(model_os$residuals, breaks = 100)
+hist(rstandard(selected.model), breaks=100)
+
+qqnorm(rstandard(selected.model))
+qqline(rstandard(selected.model))
 
 ```
 Histogram reziduala je vrlo obečavajuć te snažno podupire pretpostavku o normalnosti reziduala. Ipak, potrebno je provesti i Lillieforsovu inačicu KS testa kako bi se normalnost insinuirana histogramom potvrdila.
 
 ```{r}
 
-lillie.test(rstandard(model_os))
+lillie.test(rstandard(selected.model))
 
 ```
 S obzirom da je p-vrijednost < \(\alpha\), nulta hipoteza o normalnosti standardiziranih reziduala se odbija u korist alternativnoj hipotezi. S obzirom na osjetljivost Lillieforsovog testa, izgled histograma i robusnost T-testa, ipak se može govoriti o dovoljnoj normalnosti reziduala za daljnja testiranja.
 
 
+Za ocjenu kvalitete modela koristi se koeficjent determinacije \(R^2\), koji odgovara udjelu varijance zavisne varijable koju objašnjava dani model.
 
+
+```{r}
+summary(selected.model)
+```
+
+\(R^2\) za procjenjeni model iznosi 0.0003563, što je izrazito niska vrijednost. Također, p-vrijednost za F-test signifikantnosti modela je daleko ispod \(\alpha\). Uzimajući ove dvije ocjene u obzir, možemo sa velikom sigurnošću tvrditi kako je model linearne regresije neadekvatan odabir za modeliranje odnosa između godina i otvorenosti ispitanika. S obzirom na izgled scatter plota odnosa te dvije varijable, može se reći da je rezultat i očekivan.
 
 
 #Savjesnost između regija
