@@ -375,3 +375,126 @@ t.test(female_subjects$neuroticism_score ,male_subjects$neuroticism_score, alt =
 
 ```
 p-vrijednost je manja od 0.05, stoga se hipoteza \( H_0: \mu_{Female} = \mu_{Male} \) odbacuje u korist alternativne hipoteze \(H_1: \mu_{female} > \mu_{Male}  \)
+
+
+
+
+##Motivacija: Možemo li zaključiti nešto o jednoj osobini uzimajući kao ulazne varijable jednu ili više ostalih osobina?
+
+Ono što pritom očekujemo je da ne bi smjela postojati visoka korelacija između pojedinih osobina ličnosti pošto svaka od njih na jedinstven način opisuje određeni element ljudske osobnosti. Uz ovih 5, poznat je i velik broj drugih osobina, ali ovih 5 je izabrano na način da u idealnom slučaju u potpunosti definiraju osobnost neke osobe i razlikuju je od osobnosti drugih pojedinaca.
+
+Kao izlaznu varijablu proizvoljno smo odabrali neuroticizam, a pregledavajući znanstvenu literaturu došli smo do zaključka da bi ekstraverzija mogla u najvećoj mjeri objasniti varijaciju u neuroticizmu što i ima smisla jer osobe koje su introverti teže artikuliraju svoje emocije te su skloniji anksioznosti i depresiji.
+
+Kako bismo mogli bolje uočiti potencijalnu vezu dviju varijabli, uzet ćemo poduzorak našeg ulaznog skupa.
+
+
+```{r}
+big_five_scores1 = big_five_scores[sample(nrow(big_five_scores),2000),]
+smoothScatter(big_five_scores$extraversion_score, big_five_scores$neuroticism_score)
+plot(big_five_scores1$extraversion_score, big_five_scores1$neuroticism_score)
+
+
+```
+
+Scatter plot pokazuje da postoji negativan efekt varijable extraversion_score na izlaznu varijablu neuroticism_score. Zato ćemo pokušati kreirati model jednostavne regresije koji uključuje spomenute varijable:
+$$Y = \beta_0 + \beta_1x_1 + \epsilon$$
+Pritom pretostavljamo da je epsilon normalno distribuirana slučajna varijabla (pogreška) s homogenom i nezavisnom varijancom.
+
+```{r}
+fit.neuroticism = lm(neuroticism_score ~ extraversion_score, data = big_five_scores1)
+plot(big_five_scores1$extraversion_score, big_five_scores1$neuroticism_score)
+lines(big_five_scores1$extraversion_score, fit.neuroticism$fitted.values, col = "red")
+
+```
+
+##Provjera pretpostavki
+
+Sada ćemo provjeriti pretpostavke o normalnosti reziduala i homogenosti varijance. To ćemo učiniti grafički pomoću histograma i q-q plota te statističkim testovima - Kolmogorov-Smirnovljev test i Lillieforsova korekcija.
+
+```{r}
+#grafički prikazi
+
+
+hist(rstandard(fit.neuroticism), probability = TRUE, breaks = 30) 
+
+y <- seq(min(rstandard(fit.neuroticism)), max(rstandard(fit.neuroticism)), 0.01)
+lines(y, dnorm(y, mean(rstandard(fit.neuroticism)), sd(rstandard(fit.neuroticism))), col = "red", lwd = 3) # Iz histograma se može naslutiti normalna distribucija. Vidimo da se graf funkcije gustoće vjerojatnosti normalne slučajne varijable s parametrima uzoračke distribucije prilično dobro podudara s funkcijom gustoće vjerojatnosti varijable neuroticism_score.
+
+qqnorm(rstandard(fit.neuroticism))  
+qqline(rstandard(fit.neuroticism)) # q-q plot pokazuje da se kvantili uzoračke distribucije u velikoj mjeri slažu s teorijskim kvantilima normalne distribucije. U repovima distribucije postoje manja odstupanja što možemo objasniti mogućim postojanjem outliera.
+
+plot(fit.neuroticism$fitted.values,fit.neuroticism$residuals)  #nema naznake nehomogenosti pogreške
+```
+
+```{r}
+#normalnost reziduala - statistički testovi
+
+ks.test(rstandard(fit.neuroticism), "pnorm")
+require(nortest)
+lillie.test(rstandard(fit.neuroticism))
+shapiro.test(rstandard(fit.neuroticism))
+```
+
+Iz p vrijednost KS-testa možemo zaključiti da uz nivo značajnosti od 5% ne možemo odbaciti nultu hipotezu o normalnosti, dok iz Lillieforsove inačice možemo zaključiti da uz isti nivo značajnosti možemo odbaciti nultu hipotezu. U ovom slučaju, pošto testiramo populaciju nepoznatog očekivanja i varijance, veću važnost pridajemo drugom testu koji je ujedno i stroži od KS testa. Pošto su t-testovi koji se koriste u analizi regresijskog modela robusni na nenormalnost, a i pošto p vrijednost koju testom dobijemo nije daleko od razine značajnosti možemo nastaviti dalje s regresijskom analizom.
+
+```{r}
+summary(fit.neuroticism)
+# t-test --> koeficijenti su signifikantni
+# f-test --> Cijeli model je signifikantan
+# zaključak o R2?
+```
+
+Osim ekstraverzije kao potencijalne osobine iz koje bismo mogli nešto zaključiti o neuroticizmu osobe, pokazalo se da bi još jedna osobina u Big Five modelu mogla objašnjavati rezultat koji osoba postiže na neuroticizmu, a to je savjesnost. To možemo interpretirati time da osobe koje su nediscplinirane, neuredne i nemaju rutinu mogu biti sklonije neurotičnom ponašanju od savjesnih i organiziranih ljudi.
+
+
+```{r}
+plot(big_five_scores1$conscientiousness_score, big_five_scores1$neuroticism_score)
+smoothScatter(big_five_scores$conscientiousness_score, big_five_scores$neuroticism_score)
+
+```
+
+Iz scatter plota možemo uočiti naznaku negativne korelacije, odnosno zavisnosti dviju varijabli što odgovara našoj početnoj tezi. Kako bismo kvantificirali navedenu korelaciju, možemo izračunati Pearsonov korelacijski koeficijent za ove dvije varijable, a dodatno možemo pogledati korelacijsku tablicu svih 5 faktora što će nam pomoći i u kreiranju modela višestruke regresije i provjere njenih prepostavki.
+
+
+```{r}
+
+correlations <- cor(cbind(big_five_scores1$agreeable_score,big_five_scores1$extraversion_score, big_five_scores1$openness_score, big_five_scores1$conscientiousness_score, big_five_scores1$neuroticism_score))
+
+colnames(correlations) <- c("agreeable_score", "extraversion_score", "openness_score", "conscientiousness_score", "neuroticism_score")
+rownames(correlations) <- c("agreeable_score", "extraversion_score", "openness_score", "conscientiousness_score", "neuroticism_score")
+
+library(corrplot)
+corrplot(correlations, method = "number")
+
+cor.test(big_five_scores1$extraversion_score, big_five_scores1$neuroticism_score)
+
+```
+Iz korelacijske tablice naslućujemo da postoji određena veza između varijabli neuroticism_score i conscientiousness_score. Ono što također možemo uočiti je da nema kršenja pretpostavki, tj. da nema značajne korelacije između dviju varijabli extraversion_score i conscientiousness_score što nam ujedno pokazuje i t-test.
+
+```{r}
+plot(fit.multi$fitted.values, fit.multi$residuals)
+
+hist(rstandard(fit.multi))
+ks.test(rstandard(fit.multi), "pnorm")
+lillie.test(rstandard(fit.multi))
+```
+
+Iz grafičkog prikaza i testova zaključujemo da nema kršenja pretpostavke normalnosti reziduala.
+
+```{r}
+
+fit.neuroticism_m = lm(neuroticism_score ~ extraversion_score + conscientiousness_score, big_five_scores)
+summary(fit.neuroticism_m)
+```
+Iz modela multivarijantne regresije možemo uočiti da su svi koeficijenti signifikantni uz bilo koju razinu značajnosti. Također, koeficijent determinacije se povećao u odnosu na model jednostavne regresije što znači da je conscientiousness_score doprinio poboljšanju funkcije ovisnosti izlazne varijable o regresorima, odnosno da je veća proporcija varijacije varijable Y objašnjena ovim modelom u odnosu na prošli.
+
+
+Možemo probati uključiti i preostala dva faktora u model.
+
+```{r}
+fit.multi = lm(neuroticism_score ~ extraversion_score + conscientiousness_score + agreeable_score + openness_score, big_five_scores[big_five_scores$age > 20,])
+summary(fit.multi)
+
+```
+Vidimo da su opet svi koeficijenti signifikantni do na bilo koju razinu značajnosti. Povećanje koeficijenta determinacije postoji, ali je zanemarivo pa možemo zaključiti da dodani faktori ne objašnjavaju u značajnijoj mjeri neobjašnjenu varijaciju modela s postojeća dva faktora.
+Najveći efekt na izlaznu varijablu imaju regresori extraversion_score i conscientiousness_score.
