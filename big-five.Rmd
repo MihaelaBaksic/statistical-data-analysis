@@ -32,23 +32,34 @@ Ovaj projekt predstavit će generalni pregled podataka, pokušati pronaći pravi
 
 # Skup podataka
 
-
-Podaci su prikupljani kroz samoevaluacijske upitnike u kojima ispitanici odgovaraju na raznovrsna pitanja relevantna za analizu ličnosti. 
+Za svakog ispitanika u skupu podatka prisutne su vrijednosti za: državu, godine, spol, faktor ugodnosti, faktor ekstraverzije, faktor otvorenosti, faktor savjesnosti i faktor neuroticizma. Skup podataka ukupno sadrži
+307313 zapisa. 
+Prikazani su osnovni podaci deskriptivne statistike za cijeli skup podataka. U nastavku će se dodatno prikazati i analizirati deskriptivna statistika za varijable i podskupove podataka ovisno o potrebi problema koji se obrađuje.
+Također, vidimo da su podaci potpuni, tj. nema vrijednosti koje nedostaju, što je odlika dobrog skupa podataka.
 
 ```{r}
 
 bigfive = read.csv("./big_five_scores.csv")
 head(bigfive)
 
-```
+nrow(bigfive)
 
-```{r}
 summary(bigfive)
+
+sum(is.na(bigfive$country))
+sum(is.na(bigfive$age))
+sum(is.na(bigfive$sex))
+sum(is.na(bigfive$agreeable_score))
+sum(is.na(bigfive$extraversion_score))
+sum(is.na(bigfive$openness_score))
+sum(is.na(bigfive$conscientiousness_score))
+sum(is.na(bigfive$neuroticism_score))
 ```
 
 
 
-## Testiranje razlika u otvorenosti kod mladih i starih ispitanika
+
+# Testiranje razlika u otvorenosti kod mladih i starih ispitanika
 
 Često je prisutna pretpostavka kako su mladi ljudi otvoreniji novim iskustvima od starih. Stoga, provest će se testiranje te pretpostavke. Mladim ljudima smatrat će se svi stari 30 ili manje godina, dok će se starim ljudima smatrati oni stari 60 ili više godina. Idemo li korak dalje, može li se uspostaviti jasna veza između dobi ispitanika i njihove otvorenosti? Može li se ta veza modelirati linearnom regresijom?
 
@@ -77,7 +88,7 @@ hist(bigfive$openness_score,main='Openness score histogram',xlab='Value',ylab='F
 ```
 Deskriptivnom analizom podatka dolazimo do saznanja o razlici u srednjim vrijednostima faktora otvorenosti za mlade i stare sudionike. 
 
-# Normalnost podataka
+## Normalnost podataka
 ```{r}
 
 hist(old_subjects$openness_score,main='Openness score old subjects histogram',xlab='Value',ylab='Frequency', breaks=100)
@@ -92,7 +103,7 @@ qqline(young_subjects$openness_score, col = "steelblue", lwd = 2)
 ```
 Iz histograma i qq-plotova za openness_score mladih i starih ispitanika može se naslutiti kako podaci pripadaju normalnoj razdiobi. Ta pretpostavka pokušat će se dodatno potvrditi provođenjem Lillieforsove inačice Kolmogorov-Smirnovljevog testa. Za sve testove unutar ovog podzadatka koristi se razina značajnosti \(\alpha = 0.05\).
 
-## Testiranje normalnosti - Lillieforsova inačica Kolmogomorov-Smirnovljevog testa
+### Testiranje normalnosti - Lillieforsova inačica Kolmogomorov-Smirnovljevog testa
 
 
 Testiranje normalnosti otvorenosti za starije ispitanike
