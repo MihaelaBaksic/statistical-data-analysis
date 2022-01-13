@@ -50,7 +50,7 @@ summary(bigfive)
 
 ## Testiranje razlika u otvorenosti kod mladih i starih ispitanika
 
-Često je prisutna pretpostavka kako su mladi ljudi otvoreniji novim iskustvima od starih. Stoga, provest će se testiranje te pretpostavke. Mladim ljudima smatrat će se svi stari 30 ili manje godina, dok će se starim ljudima smatrati oni stari 60 ili više godina.
+Često je prisutna pretpostavka kako su mladi ljudi otvoreniji novim iskustvima od starih. Stoga, provest će se testiranje te pretpostavke. Mladim ljudima smatrat će se svi stari 30 ili manje godina, dok će se starim ljudima smatrati oni stari 60 ili više godina. Idemo li korak dalje, može li se uspostaviti jasna veza između dobi ispitanika i njihove otvorenosti? Može li se ta veza modelirati linearnom regresijom?
 
 ```{r}
 
@@ -64,6 +64,7 @@ cat('Srednja vrijednost otvorenosti za stare ( >= 60 godina ) ispitanike je ', m
 cat('Varijanca otvorenosti za mlade ( <= 30 godina ) ispitanike je ', var(young_subjects$openness_score), '\n')
 cat('Varijanca otvorenosti za stare ( >= 60 godina ) ispitanike je ', var(old_subjects$openness_score), '\n')
 
+
 boxplot(old_subjects$openness_score, young_subjects$openness_score, 
         names = c('Older subjects\' openness score','Younger subjects\' openness score'),
         main='Boxplot of younger and older subjects\' openness score')
@@ -72,9 +73,11 @@ boxplot(old_subjects$openness_score, young_subjects$openness_score,
 hist(bigfive$openness_score,main='Openness score histogram',xlab='Value',ylab='Frequency', breaks=100)
 
 
-```
 
-# Normalnost podataka - grafovi
+```
+Deskriptivnom analizom podatka dolazimo do saznanja o razlici u srednjim vrijednostima faktora otvorenosti za mlade i stare sudionike. 
+
+# Normalnost podataka
 ```{r}
 
 hist(old_subjects$openness_score,main='Openness score old subjects histogram',xlab='Value',ylab='Frequency', breaks=100)
@@ -87,9 +90,9 @@ qqnorm(young_subjects$openness_score, pch = 1, frame = FALSE,main='Younger subje
 qqline(young_subjects$openness_score, col = "steelblue", lwd = 2)
 
 ```
-Iz histograma i qq-plotova za openness_score mladih i starih ispitanika može se naslutiti kako podaci pripadaju normalnoj razdiobi. Ta pretpostavka pokušat će se dodatno potvrditi provođenjem Lillieforsove inačice Kolmogorov-Smirnovljevog testa. Za sve testove koristi se razina značajnosti \(\alpha = 0.05\).
+Iz histograma i qq-plotova za openness_score mladih i starih ispitanika može se naslutiti kako podaci pripadaju normalnoj razdiobi. Ta pretpostavka pokušat će se dodatno potvrditi provođenjem Lillieforsove inačice Kolmogorov-Smirnovljevog testa. Za sve testove unutar ovog podzadatka koristi se razina značajnosti \(\alpha = 0.05\).
 
-# Testiranje normalnosti - Lillieforsova inačica Kolmogomorov-Smirnovljevog testa
+## Testiranje normalnosti - Lillieforsova inačica Kolmogomorov-Smirnovljevog testa
 
 
 Testiranje normalnosti otvorenosti za starije ispitanike
@@ -121,7 +124,7 @@ S obzirom da je p-vrijednost =  2.084e-06 < \(alpha\)odbacujemo hipotezu \(H_0 :
 
 # Testiranje jednakosti srednjih vrijednosti otvorenosti za stare i mlade ispitanike
 
-Testiranje jednakosti srednjih vrijednosti T testom zahtjeva da podaci dolaze iz normalne razdiobe. Prethodno provedenim Lillieforsovim testom normalnosti pokazalo se da to ne vrijedi niti za podatke o otvorenosti mladih niti starih ispitanika. Ipak, s obzirom da histogrami i qq-plot grafovi govore u prilog normalnosti. Uzevši u obzir oblik grafova i veliku osjetljivost Lillieforstovog testa normalnosti, možemo nastaviti testiranje uz pretpostavku normalnosti podataka.
+Testiranje jednakosti srednjih vrijednosti T testom zahtjeva da podaci dolaze iz normalne razdiobe. Prethodno provedenim Lillieforsovim testom normalnosti pokazalo se da to ne vrijedi niti za podatke o otvorenosti mladih niti starih ispitanika. Ipak, histogrami i qq-plot grafovi prikazuju razdiobu koja nije daleko od normalne. Uzevši u obzir oblik grafova i veliku osjetljivost Lillieforsovog testa normalnosti, možemo nastaviti testiranje T testom uz pretpostavku normalnosti podataka.
 
 
 Testiranje jednakosti srednjih vrijednosti otvorenosti za stare i mlade ispitanike provodi se kao T test za podatke s različitim varijancama, kako je pokazano prethodnim testom. Pretpostavlja se nezavisnost uzoraka.
@@ -136,9 +139,7 @@ t.test(old_subjects$openness_score, young_subjects$openness_score, alt = "two.si
 ```
 p-vrijednost = 0.00163 < \(\alpha\), stoga se hipoteza \( H_0: \mu_{old} = \mu_{young} \) odbacuje u korist alternativne hipoteze \(H_1: \mu_{old} \neq \mu_{young}\). 
 
-
-Statističkim testiranjem pokazano je kako postoji statistički značajna razlika između srednjih vrijednosti otvorenosti mladih i starih ispitanika.
-
+Statističkim testiranjem pokazano je kako postoji statistički značajna razlika između srednjih vrijednosti otvorenosti mladih i starih ispitanika, sukladno često prisutnom mišljenju. Ova informacija ponukala nas je da pokušamo jasno modelirati vezu između tih dviju varijabli.
 
 
 ## Model linearne regresije za modeliranja odnosa godina i otvorenosti kod ispitanika
@@ -168,14 +169,14 @@ qqnorm(rstandard(selected.model))
 qqline(rstandard(selected.model))
 
 ```
-Histogram reziduala je vrlo obečavajuć te snažno podupire pretpostavku o normalnosti reziduala. Ipak, potrebno je provesti i Lillieforsovu inačicu KS testa kako bi se normalnost insinuirana histogramom potvrdila.
+Histogram reziduala je vrlo obečavajuć te snažno podupire pretpostavku o normalnosti reziduala. Ipak, potrebno je provesti i Koglomorov-Smirnovljev test kako bi se normalnost insinuirana histogramom potvrdila. Za ovu namjenu, umjesto Lillieforsovog testa koristi se KS test, jer baratamo sa standardiziranim rezidualima, za koje očekujemo da će KS test dati bolje rezultate.
 
 ```{r}
 
 ks.test(rstandard(selected.model), 'pnorm')
 
 ```
-S obzirom da je p-vrijednost < \(\alpha\), nulta hipoteza o normalnosti standardiziranih reziduala se odbija u korist alternativnoj hipotezi. S obzirom na izgled histograma, izgled qq-plota i robusnost T-testa, ipak se može govoriti o dovoljnoj normalnosti reziduala za daljnja testiranja.
+S obzirom da je p-vrijednost < \(\alpha\), nulta hipoteza o normalnosti standardiziranih reziduala se odbija u korist alternativnoj hipotezi. S obzirom na izgled histograma, izgled qq-plota i robusnost T-testa, ipak se može govoriti o dovoljnoj normalnosti reziduala za daljnja testiranja i evaluaciju modela.
 
 
 Za ocjenu kvalitete modela koristi se koeficjent determinacije \(R^2\), koji odgovara udjelu varijance zavisne varijable koju objašnjava dani model.
@@ -185,7 +186,7 @@ Za ocjenu kvalitete modela koristi se koeficjent determinacije \(R^2\), koji odg
 summary(selected.model)
 ```
 
-\(R^2\) za procjenjeni model iznosi 0.0003563, što je izrazito niska vrijednost. Također, p-vrijednost za F-test signifikantnosti modela je daleko ispod \(\alpha\). Uzimajući ove dvije ocjene u obzir, možemo sa velikom sigurnošću tvrditi kako je model linearne regresije neadekvatan odabir za modeliranje odnosa između godina i otvorenosti ispitanika. S obzirom na izgled scatter plota odnosa te dvije varijable, može se reći da je rezultat i očekivan.
+\(R^2\) za procjenjeni model iznosi 0.0003563, što je izrazito niska vrijednost. Oba parametra modela također imaju izuzetno malu p-vrijednost, čime ih se ne može smatrati statistički značajnim. Također, p-vrijednost za F-test signifikantnosti modela je daleko ispod \(\alpha\). Uzimajući ove ocjene modela u obzir, možemo sa velikom sigurnošću tvrditi kako je model linearne regresije neadekvatan odabir za modeliranje odnosa između godina i otvorenosti ispitanika. S obzirom na izgled scatter plota odnosa te dvije varijable, može se reći da je rezultat i očekivan.
 
 
 #Savjesnost između regija
