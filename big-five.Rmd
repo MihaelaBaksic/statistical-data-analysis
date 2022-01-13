@@ -177,7 +177,8 @@ summary(selected.model)
 \(R^2\) za procjenjeni model iznosi 0.0003563, što je izrazito niska vrijednost. Također, p-vrijednost za F-test signifikantnosti modela je daleko ispod \(\alpha\). Uzimajući ove dvije ocjene u obzir, možemo sa velikom sigurnošću tvrditi kako je model linearne regresije neadekvatan odabir za modeliranje odnosa između godina i otvorenosti ispitanika. S obzirom na izgled scatter plota odnosa te dvije varijable, može se reći da je rezultat i očekivan.
 
 
-#Savjesnost između regija - Uvod
+#Savjesnost između regija
+##Uvod
 
 U ovom dijelu bavimo se pitanjem imaju li neke regije značajno različite rezultate u određenom faktoru. Primjerice je li opravdan mit o visokoj savjesnosti populacije istočne Azije naspram populacije drugih kontinenata.
 
@@ -223,7 +224,7 @@ qqline(rest_regions$conscientiousness_score, col = "steelblue", lwd = 2)
 ```
 Već iz priloženih grafova mogu naslutiti da su obje distribucije normalne, da je rasipanje veće kod populacije istočne Azije nego u ostatku svijeta (pretpostavljam da je to najviše zbog činjenice da je set podataka za ostatak svijeta mnogo veći) te suprotno početnom pitanju izgleda da je savjesnost ispitanika istočne Azije manja nego u ostatku svijeta.
 
-#Savjesnost između regija - testiranje normalnosti distribucije
+##Testiranje normalnosti distribucije
 
 Hipoteze:
 
@@ -247,7 +248,7 @@ Odbacujem nultu hipotezu u korist alternative da se savjesnost ispitanika iz ost
 
 Uzevši u obzir preveliku osjetljivost ovog testa i činjenicu da je iz histograma vidljiva normalnost u nastavku pretpostavljam normalnost za obje populacije.
 
-#Savjesnost između regija - Testiranje jednakosti varijance savjesnosti
+##Testiranje jednakosti varijance savjesnosti
 
 Pretpostavljam nezavisnost uzoraka i izvodim F test.
 
@@ -260,7 +261,7 @@ var.test(east_asia$conscientiousness_score, rest_regions$conscientiousness_score
 Na osnovu male p vrijednosti odbacujem nultu hipotezu u korist alternative da su varijance distribucije različite
 
 
-#Savjesnost između regija - Testiranje jednakosti razine savjesnosti
+##Testiranje jednakosti razine savjesnosti
 
 Koristim T test i pretpostavljam nezavisnost varijabli i različitost varijanci te normalnu razdiobu.
 
@@ -274,7 +275,8 @@ t.test(east_asia$conscientiousness_score,rest_regions$conscientiousness_score, a
 ```
 Uz veliku p vrijednost nisam uspio odbaciti nultu hipotezu i zaključujem nije opravdan mit o visokoj savjesnosti populacije istočne Azije.
 
-#Savjesnost između više regija - Uvod
+##Savjesnost između više regija
+###Uvod
 
 Pošto se nisam uvjerio u ispravnost mita da su stanovnici istočne Azije savjesniji od ostatka svijeta pitam postoji li uopće razlike u savjesnosti između stavnika različitih regija. Za primjer ću uzeti pet regija za koje imam sličan broj podataka. Moje pitanje glasi: "Postoji li razlika u savjesnosti između stavnovnika Zapada, latinske Amerike, južne Afrike, sjeverne Afrike i zapadne Azije(arapskog svijeta) i centralne Azije"
 ```{r}
@@ -336,14 +338,14 @@ qqline(central_asia$conscientiousness_score, col = "steelblue", lwd = 2)
 
 Iz histograma i qq plota je vidljivo da se savjesnost svih regija ravna po normalnoj razdiobi.
 
-#Savjesnost između više regija - testiranje normalnosti distribucije
+###Testiranje normalnosti distribucije
 
 Hipoteze:
 
 H_0: distribucija regije pripada normalnoj razdiobi
 H_1: distribucija regije NE pripada normalnoj razdiobi
 
-```{r}
+```{r test normalnosti}
 lillie.test(west$conscientiousness_score)
 lillie.test(latin_america$conscientiousness_score)
 lillie.test(africa$conscientiousness_score)
@@ -352,7 +354,7 @@ lillie.test(central_asia$conscientiousness_score)
 ```
 Za savjesnost svake regije na Lillieforovom testu smo dobili izuzetno malenu p vrijednost te odbacujemo nultu hipotezu za svaku regiju. Zaključak na osnovu Lillieforova testa jest da se nijedna distribucija savjesnosti ne ravna po normalnoj razdiobi. Ali na osnovu histograma i qq plota u nastavku pretpostavljamo da se svaka distibucija savjesnosti ravna po normalnoj razdiobi.
 
-#Savjesnost između više regija - testiranje homogenosti varijance između populacija
+###Testiranje homogenosti varijance između populacija
 
 Nulta hipoteza je da su varijance savjesnosti svih regija jednake. Alternativa je da nisu odnosno da se barem jedan par varijanci nije jednak.
 
@@ -387,7 +389,7 @@ var(central_asia$conscientiousness_score)
 ```
 U nastavku pretpostavljam homegenost varijanci.
 
-#Savjesnost između više regija - testiranje anovom
+###Testiranje jednakosti savjesnosti
 
 Provjeravamo postoje li razlike u savjesnosti.
 
@@ -396,7 +398,7 @@ $$ \begin{aligned}
   H_1 & : \neg H_0.
 \end{aligned} $$
 
-```{r test pretpostavki - homogenost varijanci}
+```{r test anova - jednakost savjesnosti}
 # Test
 a = aov(df$score ~ df$region)
 summary(a)
@@ -412,7 +414,7 @@ nrow(central_asia)
 nrow(oceania)
 nrow(east_asia)
 ```
-####karakteristike prema spolu ispitanika
+#karakteristike prema spolu ispitanika
 ##1=male, 2=female
 ##članak na ovu temu(https://www.frontiersin.org/articles/10.3389/fpsyg.2011.00178/full)
 
