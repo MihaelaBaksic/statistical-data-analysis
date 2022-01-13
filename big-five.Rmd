@@ -1,8 +1,11 @@
 ---
 title: "Big Five – velikih pet dimenzija ličnosti"
 author: "Filip Grebenar, David Konjevod, Lovre Mitrović, Mihaela Bakšić"
-subtitle: Projekt iz predmeta Statistička analiza podataka, Fakultet elektrotehnike i računarstva
+subtitle: Projekt iz predmeta Statistička analiza podataka, Fakultet elektrotehnike
+  i računarstva
+date: 14.1.2022.
 output:
+  pdf_document: default
   html_document:
     df_print: paged
 ---
@@ -16,7 +19,21 @@ library(nortest)
 
 # Uvod
 
-// TODO
+Ljudske osobine i njihovo ispoljavanje često su istraživan fenomen. Trenutno dominantni model za klasifikaciju osobina ličnosti je Big Five model. Inicijalno je model bio razvijen s ciljem povezivanja osobina ličnosti i akademskih uspjeha i ponašanja. Barem četiri nezavisna skupa istraživača bavili su se problemom klasifikacija osobina ličnosti, te su svi diferencirali pet glavnih osobina ličnosti: ekstraverzija, ugodnost, savjesnost, neuroticizam i otvorenost. Bitno je naglasiti kako se ličnosti ne nalaze u ekstremima već na kontinuumu između ovih pet faktora.
+
+Ekstraverzija se odnosi na interakciju s društvenom okolinom, podrazumjevajući snalaženje i volju osobe za druženjem i poduzetnost. 
+Ugodnost predstavlja empatičnost i kooperativnost s drugima. 
+Savjesnost vrednuje odnos prema obavezama i poslu te spontanost. 
+Neuroticizam opisuje emocionalnu stabilnost osobe. 
+Otvorenost razlikuje osobe prema otvorenosti novim konceptima i idejama.
+
+Ovaj projekt predstavit će generalni pregled podataka, pokušati pronaći pravilnosti u podacima i modelirati ih. Također, pozabavit će se ispitivanjem nekih uvriježenih ideja i mišljenja o osobinama ličnosti.
+
+
+# Skup podataka
+
+
+Podaci su prikupljani kroz samoevaluacijske upitnike u kojima ispitanici odgovaraju na raznovrsna pitanja relevantna za analizu ličnosti. 
 
 ```{r}
 
@@ -24,9 +41,7 @@ bigfive = read.csv("./big_five_scores.csv")
 head(bigfive)
 
 ```
-```{r}
-View(bigfive)
-```
+
 ```{r}
 summary(bigfive)
 ```
@@ -635,3 +650,8 @@ summary(fit.multi)
 ```
 Vidimo da su opet svi koeficijenti signifikantni do na bilo koju razinu značajnosti. Povećanje koeficijenta determinacije postoji, ali je zanemarivo pa možemo zaključiti da dodani faktori ne objašnjavaju u značajnijoj mjeri neobjašnjenu varijaciju modela s postojeća dva faktora.
 Najveći efekt na izlaznu varijablu imaju regresori extraversion_score i conscientiousness_score.
+
+
+
+
+# Zaključak
