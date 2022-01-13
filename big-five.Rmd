@@ -139,10 +139,6 @@ Ipak, na temelju izgleda grafa moglo bi se zaključiti da veza između varijabli
 ```{r}
 
 selected.model = lm(openness_score~age,data=bigfive)
-
-plot(bigfive$age,bigfive$openness_score)
-lines(bigfive$openness_score, selected.model$fitted.values, col='red')
-
 ```
 
 ### Provjera pretpostavki modela
@@ -161,10 +157,10 @@ Histogram reziduala je vrlo obečavajuć te snažno podupire pretpostavku o norm
 
 ```{r}
 
-lillie.test(rstandard(selected.model))
+ks.test(rstandard(selected.model), 'pnorm')
 
 ```
-S obzirom da je p-vrijednost < \(\alpha\), nulta hipoteza o normalnosti standardiziranih reziduala se odbija u korist alternativnoj hipotezi. S obzirom na osjetljivost Lillieforsovog testa, izgled histograma i robusnost T-testa, ipak se može govoriti o dovoljnoj normalnosti reziduala za daljnja testiranja.
+S obzirom da je p-vrijednost < \(\alpha\), nulta hipoteza o normalnosti standardiziranih reziduala se odbija u korist alternativnoj hipotezi. S obzirom na izgled histograma, izgled qq-plota i robusnost T-testa, ipak se može govoriti o dovoljnoj normalnosti reziduala za daljnja testiranja.
 
 
 Za ocjenu kvalitete modela koristi se koeficjent determinacije \(R^2\), koji odgovara udjelu varijance zavisne varijable koju objašnjava dani model.
@@ -527,8 +523,8 @@ Kako bismo mogli bolje uočiti potencijalnu vezu dviju varijabli, uzet ćemo pod
 
 
 ```{r}
-big_five_scores1 = big_five_scores[sample(nrow(big_five_scores),2000),]
-smoothScatter(big_five_scores$extraversion_score, big_five_scores$neuroticism_score)
+big_five_scores1 = bigfive[sample(nrow(bigfive),2000),]
+smoothScatter(bigfive$extraversion_score, bigfive$neuroticism_score)
 plot(big_five_scores1$extraversion_score, big_five_scores1$neuroticism_score)
 
 
@@ -587,7 +583,7 @@ Osim ekstraverzije kao potencijalne osobine iz koje bismo mogli nešto zaključi
 
 ```{r}
 plot(big_five_scores1$conscientiousness_score, big_five_scores1$neuroticism_score)
-smoothScatter(big_five_scores$conscientiousness_score, big_five_scores$neuroticism_score)
+smoothScatter(bigfive$conscientiousness_score, bigfive$neuroticism_score)
 
 ```
 
@@ -610,6 +606,9 @@ cor.test(big_five_scores1$extraversion_score, big_five_scores1$neuroticism_score
 Iz korelacijske tablice naslućujemo da postoji određena veza između varijabli neuroticism_score i conscientiousness_score. Ono što također možemo uočiti je da nema kršenja pretpostavki, tj. da nema značajne korelacije između dviju varijabli extraversion_score i conscientiousness_score što nam ujedno pokazuje i t-test.
 
 ```{r}
+
+fit.multi = lm(neuroticism_score ~ conscientiousness_score, data=bigfive)
+
 plot(fit.multi$fitted.values, fit.multi$residuals)
 
 hist(rstandard(fit.multi))
@@ -621,7 +620,7 @@ Iz grafičkog prikaza i testova zaključujemo da nema kršenja pretpostavke norm
 
 ```{r}
 
-fit.neuroticism_m = lm(neuroticism_score ~ extraversion_score + conscientiousness_score, big_five_scores)
+fit.neuroticism_m = lm(neuroticism_score ~ extraversion_score + conscientiousness_score, bigfive)
 summary(fit.neuroticism_m)
 ```
 Iz modela multivarijantne regresije možemo uočiti da su svi koeficijenti signifikantni uz bilo koju razinu značajnosti. Također, koeficijent determinacije se povećao u odnosu na model jednostavne regresije što znači da je conscientiousness_score doprinio poboljšanju funkcije ovisnosti izlazne varijable o regresorima, odnosno da je veća proporcija varijacije varijable Y objašnjena ovim modelom u odnosu na prošli.
@@ -630,7 +629,7 @@ Iz modela multivarijantne regresije možemo uočiti da su svi koeficijenti signi
 Možemo probati uključiti i preostala dva faktora u model.
 
 ```{r}
-fit.multi = lm(neuroticism_score ~ extraversion_score + conscientiousness_score + agreeable_score + openness_score, big_five_scores[big_five_scores$age > 20,])
+fit.multi = lm(neuroticism_score ~ extraversion_score + conscientiousness_score + agreeable_score + openness_score, bigfive[bigfive$age > 20,])
 summary(fit.multi)
 
 ```
