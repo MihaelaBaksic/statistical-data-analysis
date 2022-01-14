@@ -492,11 +492,16 @@ Zatim možemo usporediti srednje vrijednosti za 5 kategorija kako bi uočili po 
 cat("Razlika između srednji vrijednosti:\n")
 
 srednja_vrijednost <- matrix(c(
-  mean(female_subjects$neuroticism_score),mean(male_subjects$neuroticism_score),
-  mean(female_subjects$extraversion_score), mean(male_subjects$extraversion_score),
-  mean(female_subjects$agreeable_score), mean(male_subjects$agreeable_score),
-  mean(female_subjects$conscientiousness_score), mean(male_subjects$conscientiousness_score),
-  mean(female_subjects$openness_score), mean(male_subjects$openness_score)),ncol=2)
+  mean(female_subjects$neuroticism_score),
+  mean(female_subjects$extraversion_score),
+  mean(female_subjects$agreeable_score),
+  mean(female_subjects$conscientiousness_score),
+  mean(female_subjects$openness_score),
+  mean(male_subjects$neuroticism_score),
+  mean(male_subjects$extraversion_score),
+  mean(male_subjects$agreeable_score),
+  mean(male_subjects$conscientiousness_score),
+  mean(male_subjects$openness_score)),ncol=2)
 colnames(srednja_vrijednost) <- c("Žene","Muškarci")
 rownames(srednja_vrijednost) <- c("neuroticism_score","extraversion_score","agreeable_score", "conscientiousness_score", "openness_score")
 srednja_vrijednost <- as.table(srednja_vrijednost)
@@ -504,12 +509,17 @@ print(srednja_vrijednost)
 
 
 cat("\nRazlika između varijanci:\n")
-varijance <- matrix(
-  c(var(female_subjects$neuroticism_score), var(male_subjects$neuroticism_score),
-    var(female_subjects$extraversion_score), var(male_subjects$extraversion_score),
-    var(female_subjects$agreeable_score), var(male_subjects$agreeable_score),
-    var(female_subjects$conscientiousness_score), var(male_subjects$conscientiousness_score),
-    var(female_subjects$openness_score), var(male_subjects$openness_score)),ncol=2)
+varijance <- matrix(c(
+  var(female_subjects$neuroticism_score),
+  var(female_subjects$extraversion_score),
+  var(female_subjects$agreeable_score),
+  var(female_subjects$conscientiousness_score),
+  var(female_subjects$openness_score),
+  var(male_subjects$neuroticism_score),
+  var(male_subjects$extraversion_score),
+  var(male_subjects$agreeable_score),
+  var(male_subjects$conscientiousness_score),
+  var(male_subjects$openness_score)),ncol=2)
 colnames(varijance) <- c("Žene", "Muškarci")
 rownames(varijance) <- c("neuroticism_score","extraversion_score","agreeable_score", "conscientiousness_score", "openness_score")
 varijance <- as.table(varijance)
