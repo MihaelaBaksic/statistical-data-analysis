@@ -355,7 +355,7 @@ a = aov(df$score ~ df$region)
 summary(a)
 ```
 
-Na osnovu p vrijednosti od 0.00167 odbacujem nultu hipotezu u korist alternative da očekivanje razine saavjesnosti nije isto za svaku odabranu regiju.
+Na osnovu p vrijednosti od 0.00167 odbacujem nultu hipotezu u korist alternative da očekivanje razine savjesnosti nije isto za svaku odabranu regiju.
 
 ## Motivacija: Možemo li zaključiti nešto o jednoj osobini uzimajući kao ulazne varijable jednu ili više ostalih osobina?
 
@@ -651,4 +651,4 @@ Model daje točnost od 0.6883763, što je bolje od slučajnog pogađanja spola. 
 
 # Zaključak
 
-
+Pitali smo se jesu li stanovnici istočne Azije savjesniji od ostatka svijeta, nakon provedenog istraživanja nismo se uspjeli uvjeriti u to. Dodatno smo se pitali postoji li uopće razlika u savjesnosti između regija. Za primjer smo odabrali tri regije sa sličnim brojem uzoraka i proveli ANOVA test. Odbacili smo hipotezu da su razine savjesnosti jednake u korist alternative da nisu i uvjerili smo se da postoje razlike između regija.
