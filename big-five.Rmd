@@ -357,14 +357,6 @@ summary(a)
 
 Na osnovu p vrijednosti od 0.00167 odbacujem nultu hipotezu u korist alternative da očekivanje razine saavjesnosti nije isto za svaku odabranu regiju.
 
-```{r}
-nrow(latin_america)
-nrow(arabic_world)
-nrow(central_asia)
-nrow(east_asia)
-```
-
-
 ## Motivacija: Možemo li zaključiti nešto o jednoj osobini uzimajući kao ulazne varijable jednu ili više ostalih osobina?
 
 Ono što pritom očekujemo je da ne bi smjela postojati visoka korelacija između pojedinih osobina ličnosti pošto svaka od njih na jedinstven način opisuje određeni element ljudske osobnosti. Uz ovih 5, poznat je i velik broj drugih osobina, ali ovih 5 je izabrano na način da u idealnom slučaju u potpunosti definiraju osobnost neke osobe i razlikuju je od osobnosti drugih pojedinaca.
