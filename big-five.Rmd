@@ -192,20 +192,20 @@ summary(rest_regions$conscientiousness_score)
 cat('Varijanca savjesnosti za istočnu aziju ', var(east_asia$conscientiousness_score), '\n')
 cat('Varijanca savjesnosti za ostatak svijeta ', var(rest_regions$conscientiousness_score), '\n')
 boxplot(east_asia$conscientiousness_score, rest_regions$conscientiousness_score, 
-        names = c('Istočna Azija\ savjesnost','Ostatak svijeta savjesnost'),
-        main='Boxplot za istočnu Aziju i ostatak svijeta savjesnost')
+        names = c('Istocna Azija\ savjesnost','Ostatak svijeta savjesnost'),
+        main='Boxplot za istocnu Aziju i ostatak svijeta savjesnost')
 hist(bigfive$conscientiousness_score,main='Savjesnost histogram',xlab='Value',ylab='Frequency', breaks=100)
 ```
 
 ```{r}
-hist(east_asia$conscientiousness_score,main='Histogram savjesnosti istočne Azije',xlab='Value',ylab='Frequency', breaks=100)
+hist(east_asia$conscientiousness_score,main='Histogram savjesnosti istocne Azije',xlab='Value',ylab='Frequency', breaks=100)
 hist(rest_regions$conscientiousness_score,main='Histogram savjesnosti ostatka svijeta',xlab='Value',ylab='Frequency', breaks=100)
-qqnorm(east_asia$conscientiousness_score, pch = 1, frame = FALSE,main='Istočna Azija')
+qqnorm(east_asia$conscientiousness_score, pch = 1, frame = FALSE,main='Istocna Azija')
 qqline(east_asia$conscientiousness_score, col = "steelblue", lwd = 2)
 qqnorm(rest_regions$conscientiousness_score, pch = 1, frame = FALSE,main='Ostatak svijeta')
 qqline(rest_regions$conscientiousness_score, col = "steelblue", lwd = 2)
 ```
-Već iz priloženih grafova mogu naslutiti da su obje distribucije normalne, da je rasipanje veće kod populacije istočne Azije nego u ostatku svijeta (pretpostavljam da je to najviše zbog činjenice da je set podataka za ostatak svijeta mnogo veći) te suprotno početnom pitanju izgleda da je savjesnost ispitanika istočne Azije manja nego u ostatku svijeta.
+Već iz priloženih grafova mogu naslutiti da su obje distribucije normalne te suprotno početnom pitanju izgleda da je savjesnost ispitanika istočne Azije manja nego u ostatku svijeta.
 
 ##Testiranje normalnosti distribucije
 
@@ -217,7 +217,7 @@ H_1: distribucija east_asia$conscientiousness_score NE pripada normalnoj razdiob
 ```{r}
 lillie.test(east_asia$conscientiousness_score)
 ```
-Odbacujem nultu hipotezu u korist alternative da se savjesnost ispitanaika istočne Azije ne ravna po normalnoj distribuciji.
+Na osnovu p vrijednosti od 5.76e-08 odbacujem nultu hipotezu u korist alternative da se savjesnost ispitanaika istočne Azije ne ravna po normalnoj distribuciji.
 
 Hipoteze:
 
@@ -227,7 +227,7 @@ H_1: distribucija rest_regions$conscientiousness_score NE pripada normalnoj razd
 ```{r}
 lillie.test(rest_regions$conscientiousness_score)
 ```
-Odbacujem nultu hipotezu u korist alternative da se savjesnost ispitanika iz ostalih regija ne ravna po normalnoj distibuciji.
+Na osnovu p vrijednosti od 2.2e-18 odbacujem nultu hipotezu u korist alternative da se savjesnost ispitanika iz ostalih regija ne ravna po normalnoj distibuciji.
 
 Uzevši u obzir preveliku osjetljivost ovog testa i činjenicu da je iz histograma vidljiva normalnost u nastavku pretpostavljam normalnost za obje populacije.
 
@@ -260,43 +260,31 @@ Uz veliku p vrijednost nisam uspio odbaciti nultu hipotezu i zaključujem nije o
 ##Savjesnost između više regija
 ###Uvod
 
-Pošto se nisam uvjerio u ispravnost mita da su stanovnici istočne Azije savjesniji od ostatka svijeta pitam postoji li uopće razlike u savjesnosti između stavnika različitih regija. Za primjer ću uzeti pet regija za koje imam sličan broj podataka. Moje pitanje glasi: "Postoji li razlika u savjesnosti između stavnovnika Zapada, latinske Amerike, južne Afrike, sjeverne Afrike i zapadne Azije(arapskog svijeta) i centralne Azije"
+Pošto se nisam uvjerio u ispravnost mita da su stanovnici istočne Azije savjesniji od ostatka svijeta pitam postoji li uopće razlike u savjesnosti između stavnika različitih regija. Za primjer ću uzeti tri regije za koje imam sličan broj podataka. Moje pitanje glasi: "Postoji li razlika u savjesnosti između latinske Amerike,  sjeverne Afrike i zapadne Azije(arapskog svijeta) i centralne Azije"
+
 ```{r}
-region_west = c('UK', 'USA', 'Denmark', 'Sweden', 'Iceland', 'Canada', 'Finland', 'Croatia', 'Portugal', 'Yugoslavia', 'Germany', 'Ireland', 'Belarus', 'Djibouti', 'Bulgaria', 'Spain', 'Switzerlan', 'Slovakia', 'Norway', 'France', 'Romania', 'Malta', 'Cyprus', 'Netherland', 'Belgium', 'Macedonia', 'Ukraine', 'Greece', 'Andorra', 'Latvia', 'Albania', 'Austria', 'Russian Fe', 'Poland', 'Italy', 'Estonia', 'Serbia', 'Slovenia', 'Bosnia Her', 'Hungary', 'Northern M', 'Bermuda', 'Lithuania', 'Gibraltar', 'Czech Repu', 'Monaco', 'Moldova', 'Vatican Ci', 'Luxembourg', 'Greenland', 'Vatican', 'Falkland I', 'San Marino', 'Liechtenst')
 region_latin_america = c('Argentina', 'Anguilla', 'Trinidad a', 'Chile', 'Mexico', 'Brazil', 'Bahamas', 'Haiti', 'Cayman Isl', 'Puerto Ric', 'British Vi', 'Columbia', 'Ecuador', 'Peru', 'Venezuela', 'Aruba', 'Cuba', 'Antigua', 'Suriname', 'Dominican', 'Costa Rica', 'Jamaica', 'Grenada', 'El Salvado', 'Honduras', 'St Lucia', 'Barbados', 'Virgin Isl', 'Panama', 'Belize', 'Guatemala', 'Guyana', 'Paraguay', 'Gabon', 'Uruguay', 'Faeroe Isl', 'Bolivia', 'Nicaragua', 'Turks and', 'Dominica', 'French Gui', 'Saint Kitt', 'Guadeloupe', 'St Vincent', 'Gambia')
-region_south_africa = c('South Afri', 'Burundi', 'Uganda', 'Cape Verde', 'Angola', 'Lesotho', 'Mauritius', 'Central Af', 'Benin', 'Nigeria', 'Ghana', 'Kenya', 'Zimbabwe', 'Cameroon', 'Mozambique', 'Namibia', 'Somalia', 'Zambia', 'Ivory Coas', 'Ethiopia', 'Seychelles', 'Rwanda', 'Niger', 'Mali', 'Togo', 'Botswana', 'Burkina Fa', 'Congo', 'Malawi', 'Senegal', 'Chad', 'Liberia', 'Eritrea', 'Swaziland')
 region_north_africa_and_west_asia = c('Syria', 'Egypt', 'Turkey', 'Algeria', 'Kuwait', 'Israel', 'Lebanon', 'Arabian Gu', 'Georgia', 'Saudi Arab', 'Azerbaijan', 'Jordan', 'Iraq', 'Tunisia', 'Bahrain', 'United Ara', 'Sudan', 'Oman', 'Armenia', 'Yemen', 'Qatar', 'Morocco', 'Western Sa', 'Libyan Ara')
 region_central_asia = c('India', 'Afghanista', 'Bangladesh', 'Pakistan', 'Iran', 'Turkmenist', 'Nepal', 'Sri Lanka', 'Bhutan', 'Kazakhstan', 'Maldives', 'Uzbekistan')
-region_oceania = c('Australia', 'New Zealan', 'Cocos (Kee', 'Guam')
-west = bigfive[bigfive$country %in% region_west,]
+
 latin_america = bigfive[bigfive$country %in% region_latin_america,]
-africa = bigfive[bigfive$country %in% region_south_africa,]
 arabic_world = bigfive[bigfive$country %in% region_north_africa_and_west_asia,]
 central_asia = bigfive[bigfive$country %in% region_central_asia,]
-oceania = bigfive[bigfive$country %in% region_oceania,]
 ```
 ```{r}
-summary(west$conscientiousness_score)
 summary(latin_america$conscientiousness_score)
-summary(africa$conscientiousness_score)
 summary(arabic_world$conscientiousness_score)
 summary(central_asia$conscientiousness_score)
-boxplot(west$conscientiousness_score,latin_america$conscientiousness_score,africa$conscientiousness_score,arabic_world$conscientiousness_score,central_asia$conscientiousness_score, 
-        names = c('Zapad','Latinska amerika','Afrika','Arapski svijet','Centralna\n Azija'),
+boxplot(latin_america$conscientiousness_score,arabic_world$conscientiousness_score,central_asia$conscientiousness_score, 
+        names = c('Latinska amerika','Arapski svijet','Centralna\n Azija'),
         main='Boxplot savjesnosti za zadane regije')
 ```
 
 
 ```{r}
-hist(west$conscientiousness_score,main='Histogram savjesnosti Zapada',xlab='Value',ylab='Frequency', breaks=100)
-qqnorm(west$conscientiousness_score, pch = 1, frame = FALSE,main='Savjesnost Zapada')
-qqline(west$conscientiousness_score, col = "steelblue", lwd = 2)
 hist(latin_america$conscientiousness_score,main='Histogram savjesnosti Latinske Amerike',xlab='Value',ylab='Frequency', breaks=100)
 qqnorm(latin_america$conscientiousness_score, pch = 1, frame = FALSE,main='Savjesnost Latinske Amerike')
 qqline(latin_america$conscientiousness_score, col = "steelblue", lwd = 2)
-hist(africa$conscientiousness_score,main='Histogram savjesnosti Afrike',xlab='Value',ylab='Frequency', breaks=100)
-qqnorm(africa$conscientiousness_score, pch = 1, frame = FALSE,main='Savjesnost Afrike')
-qqline(africa$conscientiousness_score, col = "steelblue", lwd = 2)
 hist(arabic_world$conscientiousness_score,main='Histogram savjesnosti Arapskog svijeta',xlab='Value',ylab='Frequency', breaks=100)
 qqnorm(arabic_world$conscientiousness_score, pch = 1, frame = FALSE,main='Savjesnost Arapski svijet')
 qqline(arabic_world$conscientiousness_score, col = "steelblue", lwd = 2)
@@ -305,7 +293,7 @@ qqnorm(central_asia$conscientiousness_score, pch = 1, frame = FALSE,main='Savjes
 qqline(central_asia$conscientiousness_score, col = "steelblue", lwd = 2)
 ```
 
-Iz histograma i qq plota je vidljivo da se savjesnost svih regija ravna po normalnoj razdiobi.
+Iz histograma i qq plota je vidljivo da se savjesnost svih zadanih regija ravna po normalnoj razdiobi.
 
 ###Testiranje normalnosti distribucije
 
@@ -315,9 +303,7 @@ H_0: distribucija regije pripada normalnoj razdiobi
 H_1: distribucija regije NE pripada normalnoj razdiobi
 
 ```{r test normalnosti}
-lillie.test(west$conscientiousness_score)
 lillie.test(latin_america$conscientiousness_score)
-lillie.test(africa$conscientiousness_score)
 lillie.test(arabic_world$conscientiousness_score)
 lillie.test(central_asia$conscientiousness_score)
 ```
@@ -328,7 +314,7 @@ Za savjesnost svake regije na Lillieforovom testu smo dobili izuzetno malenu p v
 Nulta hipoteza je da su varijance savjesnosti svih regija jednake. Alternativa je da nisu odnosno da se barem jedan par varijanci nije jednak.
 
 $$ \begin{aligned}
-  H_0 & : \sigma_1^2 = \sigma_2^2 = \sigma_3^2 = \sigma_4^2 = \sigma_5^2 \\
+  H_0 & : \sigma_{latin America}^2 = \sigma_{arabic World}^2 = \sigma_{centralAsia}^2 \\
   H_1 & : \neg H_0.
 \end{aligned} $$
 
@@ -336,36 +322,40 @@ Za testiranje ove hipoteze koristimo Bartlettov test.
 
 ```{r test pretpostavki - homogenost varijanci}
 score = c(latin_america$conscientiousness_score,arabic_world$conscientiousness_score,central_asia$conscientiousness_score)
-west_vec = rep(c("west"),length(west$conscientiousness_score))
+
 la_vec = rep(c("latin_america"),length(latin_america$conscientiousness_score))
-afr_vec = rep(c("africa"),length(africa$conscientiousness_score))
 arb_vec = rep(c("arabic_world"),length(arabic_world$conscientiousness_score))
 asi_vec = rep(c("central_asia"),length(central_asia$conscientiousness_score))
 region = c(la_vec,arb_vec,asi_vec)
+
 df = data.frame(region,score)
+
 bartlett.test(df$score ~ df$region)
-var(west$conscientiousness_score)
+
 var(latin_america$conscientiousness_score)
-var(africa$conscientiousness_score)
 var(arabic_world$conscientiousness_score)
 var(central_asia$conscientiousness_score)
 ```
-U nastavku pretpostavljam homegenost varijanci.
+Na osnovu p vrijednosti od 0.01102 odbacujem nultu hipotezu i zaključujem da varijance ove tri populacije nisu homogene. Ali za potrebe testiranja u nastavku pretpostavljam da jesu.
 
 ###Testiranje jednakosti savjesnosti
 
-Provjeravamo postoje li razlike u savjesnosti.
+Provjeravamo postoje li razlike u savjesnosti između regija. Kao nultu hipotezu pretpostavljam da sve odabrane regije imaju jednako očekivanje razinu savjesnosti naspram alternativne hipoteze da nemaju to jest da barem jedan par regija nema jednako očekivanje za razinu savjesnosti.
 
 $$ \begin{aligned}
-  H_0 & : \mu_1^2 = \mu_2^2 = \mu_3^2 = \mu_4^2 = \mu_5^2 \\
+  H_0 & : \mu_{latinAmerica}^2 = \mu_{arabicWorld}^2 = \mu_{centralAsia}^2 \\
   H_1 & : \neg H_0.
 \end{aligned} $$
+
+U svrhu testiranja naših hipoteza koristit ćemo ANOVA test. Zbog pretpostavki ANOVA testa pretpostavljam da su distribucije normalne, varijance homogene i podaci nezavisni.
 
 ```{r test anova - jednakost savjesnosti}
 # Test
 a = aov(df$score ~ df$region)
 summary(a)
 ```
+
+Na osnovu p vrijednosti od 0.00167 odbacujem nultu hipotezu u korist alternative da očekivanje razine saavjesnosti nije isto za svaku odabranu regiju.
 
 ```{r}
 nrow(west)
