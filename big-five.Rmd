@@ -19,7 +19,7 @@ library(nortest)
 
 # Uvod
 
-Ljudske osobine i njihovo ispoljavanje često su istraživan fenomen. Trenutno dominantni model za klasifikaciju osobina ličnosti je Big Five model. Inicijalno je model bio razvijen s ciljem povezivanja osobina ličnosti i akademskih uspjeha i ponašanja. Barem četiri nezavisna skupa istraživača bavili su se problemom klasifikacija osobina ličnosti, te su svi diferencirali pet glavnih osobina ličnosti: ekstraverzija, ugodnost, savjesnost, neuroticizam i otvorenost. Bitno je naglasiti kako se ličnosti ne nalaze u ekstremima već na kontinuumu između ovih pet faktora.
+Ljudske osobine i njihova manifestacija često su istraživan fenomen. Trenutno dominantni model za klasifikaciju osobina ličnosti je Big Five model. Inicijalno je model bio razvijen s ciljem povezivanja osobina ličnosti i akademskih uspjeha i ponašanja. Barem četiri nezavisna skupa istraživača bavili su se problemom klasifikacija osobina ličnosti, te su svi diferencirali pet glavnih osobina ličnosti: ekstraverzija, ugodnost, savjesnost, neuroticizam i otvorenost. Bitno je naglasiti kako se ličnosti ne nalaze u ekstremima već na kontinuumu između ovih pet faktora.
 
 Ekstraverzija se odnosi na interakciju s društvenom okolinom, podrazumjevajući snalaženje i volju osobe za druženjem i poduzetnost. 
 Ugodnost predstavlja empatičnost i kooperativnost s drugima. 
@@ -85,14 +85,14 @@ qqline(young_subjects$openness_score, col = "steelblue", lwd = 2)
 ```
 Iz histograma i qq-plotova za openness_score mladih i starih ispitanika može se naslutiti kako podaci pripadaju normalnoj razdiobi. Ta pretpostavka pokušat će se dodatno potvrditi provođenjem Lillieforsove inačice Kolmogorov-Smirnovljevog testa. Za sve testove unutar ovog podzadatka koristi se razina značajnosti \(\alpha = 0.05\).
 
-### Testiranje normalnosti - Lillieforsova inačica Kolmogomorov-Smirnovljevog testa
+### Testiranje normalnosti - Lillieforsova inačica Kolmogorov-Smirnovljevog testa
 
 
 Testiranje normalnosti otvorenosti za starije ispitanike
 ```{r}
 lillie.test(old_subjects$openness_score)
 ```
-S obzirom da je p-vrijednost = 0.000517 < \(\alpha\), nulta hipoteza o pripadnosti podataka o otvorenosti starih ispitanika normalnoj raspodjeli se odbacije u korist alternativne hipoteze.
+S obzirom da je p-vrijednost = 0.000517 < \(\alpha\), nulta hipoteza o pripadnosti podataka o otvorenosti starih ispitanika normalnoj raspodijeli se odbacije u korist alternativne hipoteze.
 
 Testiranje normalnosti faktora otvorenosti za mlađe ispitanike
 ```{r}
@@ -207,7 +207,7 @@ qqline(east_asia$conscientiousness_score, col = "steelblue", lwd = 2)
 qqnorm(rest_regions$conscientiousness_score, pch = 1, frame = FALSE,main='Ostatak svijeta')
 qqline(rest_regions$conscientiousness_score, col = "steelblue", lwd = 2)
 ```
-Već iz priloženih grafova mogu naslutiti da su obje distribucije normalne te suprotno početnom pitanju izgleda da je savjesnost ispitanika istočne Azije manja nego u ostatku svijeta.
+Već iz priloženih grafova može se naslutiti da su obje distribucije normalne te suprotno početnom pitanju izgleda da je savjesnost ispitanika istočne Azije manja nego u ostatku svijeta.
 
 ## Testiranje normalnosti distribucije
 
@@ -219,7 +219,7 @@ H_1: distribucija east_asia$conscientiousness_score NE pripada normalnoj razdiob
 ```{r}
 lillie.test(east_asia$conscientiousness_score)
 ```
-Na osnovu p vrijednosti od 5.76e-08 odbacujem nultu hipotezu u korist alternative da se savjesnost ispitanaika istočne Azije ne ravna po normalnoj distribuciji.
+Na osnovu p vrijednosti od 5.76e-08 odbacujemo nultu hipotezu u korist alternative da se savjesnost ispitanika istočne Azije ne ravna po normalnoj distribuciji.
 
 Hipoteze:
 
@@ -235,7 +235,7 @@ Uzevši u obzir preveliku osjetljivost ovog testa i činjenicu da je iz histogra
 
 ## Testiranje jednakosti varijance savjesnosti
 
-Pretpostavljam nezavisnost uzoraka i izvodim F test.
+Pretpostavljamo nezavisnost uzoraka i izvodim F test.
 
 Hipoteze:
 
@@ -244,12 +244,12 @@ $$H_1: \sigma^2_{east Asia} \neq \sigma^2_{rest}  $$
 ```{r}
 var.test(east_asia$conscientiousness_score, rest_regions$conscientiousness_score)
 ```
-Na osnovu male p vrijednosti odbacujem nultu hipotezu u korist alternative da su varijance distribucije različite
+Na osnovu male p vrijednosti odbacujemo nultu hipotezu u korist alternative da su varijance distribucije različite
 
 
 ## Testiranje jednakosti razine savjesnosti
 
-Koristim T test i pretpostavljam nezavisnost varijabli i različitost varijanci te normalnu razdiobu.
+Koristimo T test i pretpostavljam nezavisnost varijabli i različitost varijanci te normalnu razdiobu.
 
 Hipoteze:
 
@@ -259,12 +259,12 @@ $$ H_1: \mu_{eastAsia} > \mu_{rest}  $$
 ```{r}
 t.test(east_asia$conscientiousness_score,rest_regions$conscientiousness_score, alt = "greater", var.equal = FALSE)
 ```
-Uz veliku p vrijednost nisam uspio odbaciti nultu hipotezu i zaključujem nije opravdan mit o visokoj savjesnosti populacije istočne Azije.
+Uz veliku p vrijednost nismo uspjeli odbaciti nultu hipotezu i zaključujem nije opravdan mit o visokoj savjesnosti populacije istočne Azije.
 
 ## Savjesnost između više regija
 ### Uvod
 
-Pošto se nisam uvjerio u ispravnost mita da su stanovnici istočne Azije savjesniji od ostatka svijeta pitam postoji li uopće razlike u savjesnosti između stavnika različitih regija. Za primjer ću uzeti tri regije za koje imam sličan broj podataka. Moje pitanje glasi: "Postoji li razlika u savjesnosti između latinske Amerike,  sjeverne Afrike i zapadne Azije(arapskog svijeta) i centralne Azije"
+Pošto se nismo uvjerili u ispravnost mita da su stanovnici istočne Azije savjesniji od ostatka svijeta pitam postoji li uopće razlike u savjesnosti između stavnika različitih regija. Za primjer ćemo uzeti tri regije za koje imamo sličan broj podataka. Naše pitanje glasi: "Postoji li razlika u savjesnosti između latinske Amerike,  sjeverne Afrike i zapadne Azije(arapskog svijeta) i centralne Azije"
 
 ```{r,  out.width= "65%"}
 region_latin_america = c('Argentina', 'Anguilla', 'Trinidad a', 'Chile', 'Mexico', 'Brazil', 'Bahamas', 'Haiti', 'Cayman Isl', 'Puerto Ric', 'British Vi', 'Columbia', 'Ecuador', 'Peru', 'Venezuela', 'Aruba', 'Cuba', 'Antigua', 'Suriname', 'Dominican', 'Costa Rica', 'Jamaica', 'Grenada', 'El Salvado', 'Honduras', 'St Lucia', 'Barbados', 'Virgin Isl', 'Panama', 'Belize', 'Guatemala', 'Guyana', 'Paraguay', 'Gabon', 'Uruguay', 'Faeroe Isl', 'Bolivia', 'Nicaragua', 'Turks and', 'Dominica', 'French Gui', 'Saint Kitt', 'Guadeloupe', 'St Vincent', 'Gambia')
@@ -315,7 +315,7 @@ Za savjesnost svake regije na Lillieforovom testu smo dobili izuzetno malenu p v
 
 ### Testiranje homogenosti varijance između populacija
 
-Nulta hipoteza je da su varijance savjesnosti svih regija jednake. Alternativa je da nisu odnosno da se barem jedan par varijanci nije jednak.
+Nulta hipoteza je da su varijance savjesnosti svih regija jednake. Alternativa je da nisu odnosno da se barem jedan par varijanci razlikuje.
 
 $$ \begin{aligned}
   H_0 & : \sigma_{latin America}^2 = \sigma_{arabic World}^2 = \sigma_{centralAsia}^2 \\
@@ -340,11 +340,11 @@ var(latin_america$conscientiousness_score)
 var(arabic_world$conscientiousness_score)
 var(central_asia$conscientiousness_score)
 ```
-Na osnovu p vrijednosti od 0.01102 odbacujem nultu hipotezu i zaključujem da varijance ove tri populacije nisu homogene. Ali za potrebe testiranja u nastavku pretpostavljam da jesu.
+Na osnovu p vrijednosti od 0.01102 odbacujemo nultu hipotezu i zaključujem da varijance ove tri populacije nisu homogene. Ali za potrebe testiranja u nastavku pretpostavljamo da jesu.
 
 ### Testiranje jednakosti savjesnosti
 
-Provjeravamo postoje li razlike u savjesnosti između regija. Kao nultu hipotezu pretpostavljam da sve odabrane regije imaju jednako očekivanje razinu savjesnosti naspram alternativne hipoteze da nemaju to jest da barem jedan par regija nema jednako očekivanje za razinu savjesnosti.
+Provjeravamo postoje li razlike u savjesnosti između regija. Kao nultu hipotezu pretpostavljamo da sve odabrane regije imaju jednako očekivanje razinu savjesnosti naspram alternativne hipoteze da nemaju to jest da barem jedan par regija nema jednako očekivanje za razinu savjesnosti.
 
 $$ \begin{aligned}
   H_0 & : \mu_{latinAmerica}^2 = \mu_{arabicWorld}^2 = \mu_{centralAsia}^2 \\
@@ -359,7 +359,7 @@ a = aov(df$score ~ df$region)
 summary(a)
 ```
 
-Na osnovu p vrijednosti od 0.00167 odbacujem nultu hipotezu u korist alternative da očekivanje razine savjesnosti nije isto za svaku odabranu regiju.
+Na osnovu p vrijednosti od 0.00167 odbacujemo nultu hipotezu u korist alternative da očekivanje razine savjesnosti nije isto za svaku odabranu regiju.
 
 
 
@@ -650,7 +650,7 @@ t.test(female_subjects$neuroticism_score ,male_subjects$neuroticism_score, alt =
 p-vrijednost je manja od 0.05, stoga se hipoteza \( H_0: \mu_{Female} = \mu_{Male} \) odbacuje u korist alternativne hipoteze \(H_1: \mu_{female} > \mu_{Male}  \)
 
 
-Osim neurotizicma za koji smo statističkim testiranjem utvrdili da se razlikuje između spolova, osobina koja bi se potencijalno također mogla pokazati kao razlikovni faktor između spolova jest ugodnost (https://www.frontiersin.org/articles/10.3389/fpsyg.2011.00178/full).
+Osim neuroticizma za koji smo statističkim testiranjem utvrdili da se razlikuje između spolova, osobina koja bi se potencijalno također mogla pokazati kao razlikovni faktor između spolova jest ugodnost (https://www.frontiersin.org/articles/10.3389/fpsyg.2011.00178/full).
 Možemo grafički prikazati ovisnost tih dviju varijabli te istaknuti razliku u spolovima.
 
 ```{r}
@@ -717,6 +717,5 @@ anova(model, model1, test = "LRT")
 ```
 Likelihood ratio test (LRT) pokazao je da postoji značajna razlika u devijancama te možemo zaključiti kako uz dodatne preostale faktore, naš model ima veću kvalitetu. 
 Međutim, ono što ne možemo je tvrditi da sa velikom vjerojatnosti na temelju samo rezultata faktora možemo predvidjeti spol.
-
 
 
