@@ -358,12 +358,9 @@ summary(a)
 Na osnovu p vrijednosti od 0.00167 odbacujem nultu hipotezu u korist alternative da očekivanje razine saavjesnosti nije isto za svaku odabranu regiju.
 
 ```{r}
-nrow(west)
 nrow(latin_america)
-nrow(africa)
 nrow(arabic_world)
 nrow(central_asia)
-nrow(oceania)
 nrow(east_asia)
 ```
 
@@ -472,7 +469,7 @@ Vidimo da su opet svi koeficijenti signifikantni do na bilo koju razinu značajn
 Najveći efekt na izlaznu varijablu imaju regresori extraversion_score i conscientiousness_score.
 
 
-####karakteristike prema spolu ispitanika
+####Karakteristike prema spolu ispitanika
 Postoje li razlike u karakteristikama prema spolu ispitanika? Možemo li temeljem nekih drugih varijabli odrediti spol ispitanika? Želimo ispitati da li postoje dovoljne razlike između razultata testiranja između pripadnika ratličitih spolova da bi mogli na temelju rezultata ispitivanja odrediti da li je test riješavala žena ili muškarac.
 
 Kako bi znali predvidjeti spol ispitanika, možemo ispitati različite varijable koje bi mogle utjecati na spol:
