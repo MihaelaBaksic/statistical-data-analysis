@@ -59,7 +59,7 @@ sum(is.na(bigfive$neuroticism_score))
 
 Često je prisutna pretpostavka kako su mladi ljudi otvoreniji novim iskustvima od starih. Stoga, provest će se testiranje te pretpostavke. Mladim ljudima smatrat će se svi stari 30 ili manje godina, dok će se starim ljudima smatrati oni stari 60 ili više godina. Idemo li korak dalje, može li se uspostaviti jasna veza između dobi ispitanika i njihove otvorenosti? Može li se ta veza modelirati linearnom regresijom?
 
-```{r}
+```{r, out.width= "65%"}
 cat('Medijan godina svih ispitanika je ', median(bigfive$age),'\n')
 old_subjects = bigfive[bigfive$age >= 60 ,]
 young_subjects = bigfive[bigfive$age <= 30 ,]
@@ -75,7 +75,7 @@ hist(bigfive$openness_score,main='Openness score histogram',xlab='Value',ylab='F
 Deskriptivnom analizom podatka dolazimo do saznanja o razlici u srednjim vrijednostima faktora otvorenosti za mlade i stare sudionike. 
 
 ## Normalnost podataka
-```{r}
+```{r, out.width= "65%"}
 hist(old_subjects$openness_score,main='Openness score old subjects histogram',xlab='Value',ylab='Frequency', breaks=100)
 hist(young_subjects$openness_score,main='Openness score young subjects histogram',xlab='Value',ylab='Frequency', breaks=100)
 qqnorm(old_subjects$openness_score, pch = 1, frame = FALSE,main='Older subjects')
@@ -138,7 +138,7 @@ Statističkim testiranjem pokazano je kako postoji statistički značajna razlik
 
 S obzirom na činjenicu da smo prethodnim testovima pokazali da je razlika između srednjih vrijednosti otvorenosti za mlade i stare ispitanike statistički značajna, vrijedilo bi se pozabaviti pitanjem odnosa između varijabli godina (age) i otvorenosti (openness_score). Za modeliranje ovisnosti koristi se model linearne regresije. Kako bi se dobio dojam o mogućoj zavisnosti varijable koja ocjenjuje otvorenost ispitanika i njihovih godina, prikazan je grafički prikaz u obliku scatter-plota.
 
-```{r}
+```{r,  out.width= "65%"}
 plot(bigfive$age,bigfive$openness_score)
 ```
 Ipak, na temelju izgleda grafa moglo bi se zaključiti da veza između varijabli ne postoji ili nije statistički značajna. Kako bi se moglo preciznije diskutirati o tom pitanju, nastavit će se s modeliranjem njihvog odnosa modelom linearne regresije i provođenjem testova nad modelom, unatoč sugestiji grafičkog prikaza da je korelacija između varijabli vrlo slaba. Na temelju ocjene sposobnosti modela linearne regresije da modelira prikupljene podatke, ocjenit će se i njihova linearna zavisnost. Izlazna varijabla u modelu je openness_score, dok je varijabla age regresor. S obzirom da je priutan samo jedan regresor, koristi se jednostavna linearna regresija.
@@ -151,7 +151,7 @@ selected.model = lm(openness_score~age,data=bigfive)
 
 Prije svega treba provjeriti pretpostavke modela. Prva pretpostavka modela linearne regresije je da su reziduali normalno distribuirani i imaju homogenu varijancu. S obzirom da je korišten model jednostavne regresije, nije potrebno baviti se pretpostavkom o slaboj međusobnoj koreliranosti regresora.
 
-```{r}
+```{r,  out.width= "65%"}
 hist(rstandard(selected.model), breaks=100)
 qqnorm(rstandard(selected.model))
 qqline(rstandard(selected.model))
@@ -174,14 +174,14 @@ summary(selected.model)
 \(R^2\) za procjenjeni model iznosi 0.0003563, što je izrazito niska vrijednost. Oba parametra modela također imaju izuzetno malu p-vrijednost, čime ih se ne može smatrati statistički značajnim. Također, p-vrijednost za F-test signifikantnosti modela je daleko ispod \(\alpha\). Uzimajući ove ocjene modela u obzir, možemo sa velikom sigurnošću tvrditi kako je model linearne regresije neadekvatan odabir za modeliranje odnosa između godina i otvorenosti ispitanika. S obzirom na izgled scatter plota odnosa te dvije varijable, može se reći da je rezultat i očekivan.
 
 
-#Savjesnost između regija
-##Uvod
+# Savjesnost između regija
+## Uvod
 
 U ovom dijelu bavimo se pitanjem imaju li neke regije značajno različite rezultate u određenom faktoru. Primjerice je li opravdan mit o visokoj savjesnosti populacije istočne Azije naspram populacije drugih kontinenata.
 
 Regije sam podijelio na osnovu UN-ove podjele (izvor:"https://unstats.un.org/sdgs/indicators/regional-groups/").
 
-```{r}
+```{r,  out.width= "65%"}
 `%!in%` <- Negate(`%in%`)
 region_east_asian =c('Brunei','Cambodia','China','Hong Kong','Indonesia','Japan','Macau', 'Malaysia', 'Mongolia','Burma(Myan','North Kore', 'Philippine','Singapore','South Kore','Burma', 'Thailand','Vietnam', 'Taiwan','Borneo')
 east_asia = bigfive[bigfive$country %in% region_east_asian,]
@@ -197,7 +197,7 @@ boxplot(east_asia$conscientiousness_score, rest_regions$conscientiousness_score,
 hist(bigfive$conscientiousness_score,main='Savjesnost histogram',xlab='Value',ylab='Frequency', breaks=100)
 ```
 
-```{r}
+```{r,  out.width= "65%"}
 hist(east_asia$conscientiousness_score,main='Histogram savjesnosti istocne Azije',xlab='Value',ylab='Frequency', breaks=100)
 hist(rest_regions$conscientiousness_score,main='Histogram savjesnosti ostatka svijeta',xlab='Value',ylab='Frequency', breaks=100)
 qqnorm(east_asia$conscientiousness_score, pch = 1, frame = FALSE,main='Istocna Azija')
@@ -207,7 +207,7 @@ qqline(rest_regions$conscientiousness_score, col = "steelblue", lwd = 2)
 ```
 Već iz priloženih grafova mogu naslutiti da su obje distribucije normalne te suprotno početnom pitanju izgleda da je savjesnost ispitanika istočne Azije manja nego u ostatku svijeta.
 
-##Testiranje normalnosti distribucije
+## Testiranje normalnosti distribucije
 
 Hipoteze:
 
@@ -231,7 +231,7 @@ Na osnovu p vrijednosti od 2.2e-18 odbacujem nultu hipotezu u korist alternative
 
 Uzevši u obzir preveliku osjetljivost ovog testa i činjenicu da je iz histograma vidljiva normalnost u nastavku pretpostavljam normalnost za obje populacije.
 
-##Testiranje jednakosti varijance savjesnosti
+## Testiranje jednakosti varijance savjesnosti
 
 Pretpostavljam nezavisnost uzoraka i izvodim F test.
 
@@ -244,7 +244,7 @@ var.test(east_asia$conscientiousness_score, rest_regions$conscientiousness_score
 Na osnovu male p vrijednosti odbacujem nultu hipotezu u korist alternative da su varijance distribucije različite
 
 
-##Testiranje jednakosti razine savjesnosti
+## Testiranje jednakosti razine savjesnosti
 
 Koristim T test i pretpostavljam nezavisnost varijabli i različitost varijanci te normalnu razdiobu.
 
@@ -257,12 +257,12 @@ t.test(east_asia$conscientiousness_score,rest_regions$conscientiousness_score, a
 ```
 Uz veliku p vrijednost nisam uspio odbaciti nultu hipotezu i zaključujem nije opravdan mit o visokoj savjesnosti populacije istočne Azije.
 
-##Savjesnost između više regija
-###Uvod
+## Savjesnost između više regija
+### Uvod
 
 Pošto se nisam uvjerio u ispravnost mita da su stanovnici istočne Azije savjesniji od ostatka svijeta pitam postoji li uopće razlike u savjesnosti između stavnika različitih regija. Za primjer ću uzeti tri regije za koje imam sličan broj podataka. Moje pitanje glasi: "Postoji li razlika u savjesnosti između latinske Amerike,  sjeverne Afrike i zapadne Azije(arapskog svijeta) i centralne Azije"
 
-```{r}
+```{r,  out.width= "65%"}
 region_latin_america = c('Argentina', 'Anguilla', 'Trinidad a', 'Chile', 'Mexico', 'Brazil', 'Bahamas', 'Haiti', 'Cayman Isl', 'Puerto Ric', 'British Vi', 'Columbia', 'Ecuador', 'Peru', 'Venezuela', 'Aruba', 'Cuba', 'Antigua', 'Suriname', 'Dominican', 'Costa Rica', 'Jamaica', 'Grenada', 'El Salvado', 'Honduras', 'St Lucia', 'Barbados', 'Virgin Isl', 'Panama', 'Belize', 'Guatemala', 'Guyana', 'Paraguay', 'Gabon', 'Uruguay', 'Faeroe Isl', 'Bolivia', 'Nicaragua', 'Turks and', 'Dominica', 'French Gui', 'Saint Kitt', 'Guadeloupe', 'St Vincent', 'Gambia')
 region_north_africa_and_west_asia = c('Syria', 'Egypt', 'Turkey', 'Algeria', 'Kuwait', 'Israel', 'Lebanon', 'Arabian Gu', 'Georgia', 'Saudi Arab', 'Azerbaijan', 'Jordan', 'Iraq', 'Tunisia', 'Bahrain', 'United Ara', 'Sudan', 'Oman', 'Armenia', 'Yemen', 'Qatar', 'Morocco', 'Western Sa', 'Libyan Ara')
 region_central_asia = c('India', 'Afghanista', 'Bangladesh', 'Pakistan', 'Iran', 'Turkmenist', 'Nepal', 'Sri Lanka', 'Bhutan', 'Kazakhstan', 'Maldives', 'Uzbekistan')
@@ -281,7 +281,7 @@ boxplot(latin_america$conscientiousness_score,arabic_world$conscientiousness_sco
 ```
 
 
-```{r}
+```{r,  out.width= "65%"}
 hist(latin_america$conscientiousness_score,main='Histogram savjesnosti Latinske Amerike',xlab='Value',ylab='Frequency', breaks=100)
 qqnorm(latin_america$conscientiousness_score, pch = 1, frame = FALSE,main='Savjesnost Latinske Amerike')
 qqline(latin_america$conscientiousness_score, col = "steelblue", lwd = 2)
@@ -295,7 +295,7 @@ qqline(central_asia$conscientiousness_score, col = "steelblue", lwd = 2)
 
 Iz histograma i qq plota je vidljivo da se savjesnost svih zadanih regija ravna po normalnoj razdiobi.
 
-###Testiranje normalnosti distribucije
+### Testiranje normalnosti distribucije
 
 Hipoteze:
 
@@ -309,7 +309,7 @@ lillie.test(central_asia$conscientiousness_score)
 ```
 Za savjesnost svake regije na Lillieforovom testu smo dobili izuzetno malenu p vrijednost te odbacujemo nultu hipotezu za svaku regiju. Zaključak na osnovu Lillieforova testa jest da se nijedna distribucija savjesnosti ne ravna po normalnoj razdiobi. Ali na osnovu histograma i qq plota u nastavku pretpostavljamo da se svaka distibucija savjesnosti ravna po normalnoj razdiobi.
 
-###Testiranje homogenosti varijance između populacija
+### Testiranje homogenosti varijance između populacija
 
 Nulta hipoteza je da su varijance savjesnosti svih regija jednake. Alternativa je da nisu odnosno da se barem jedan par varijanci nije jednak.
 
@@ -320,7 +320,7 @@ $$ \begin{aligned}
 
 Za testiranje ove hipoteze koristimo Bartlettov test.
 
-```{r test pretpostavki - homogenost varijanci}
+```{r test pretpostavki - homogenost varijanci,  out.width= "65%"}
 score = c(latin_america$conscientiousness_score,arabic_world$conscientiousness_score,central_asia$conscientiousness_score)
 
 la_vec = rep(c("latin_america"),length(latin_america$conscientiousness_score))
@@ -338,7 +338,7 @@ var(central_asia$conscientiousness_score)
 ```
 Na osnovu p vrijednosti od 0.01102 odbacujem nultu hipotezu i zaključujem da varijance ove tri populacije nisu homogene. Ali za potrebe testiranja u nastavku pretpostavljam da jesu.
 
-###Testiranje jednakosti savjesnosti
+### Testiranje jednakosti savjesnosti
 
 Provjeravamo postoje li razlike u savjesnosti između regija. Kao nultu hipotezu pretpostavljam da sve odabrane regije imaju jednako očekivanje razinu savjesnosti naspram alternativne hipoteze da nemaju to jest da barem jedan par regija nema jednako očekivanje za razinu savjesnosti.
 
@@ -349,7 +349,7 @@ $$ \begin{aligned}
 
 U svrhu testiranja naših hipoteza koristit ćemo ANOVA test. Zbog pretpostavki ANOVA testa pretpostavljam da su distribucije normalne, varijance homogene i podaci nezavisni.
 
-```{r test anova - jednakost savjesnosti}
+```{r test anova - jednakost savjesnosti,  out.width= "65%"}
 # Test
 a = aov(df$score ~ df$region)
 summary(a)
@@ -365,7 +365,7 @@ nrow(east_asia)
 ```
 
 
-##Motivacija: Možemo li zaključiti nešto o jednoj osobini uzimajući kao ulazne varijable jednu ili više ostalih osobina?
+## Motivacija: Možemo li zaključiti nešto o jednoj osobini uzimajući kao ulazne varijable jednu ili više ostalih osobina?
 
 Ono što pritom očekujemo je da ne bi smjela postojati visoka korelacija između pojedinih osobina ličnosti pošto svaka od njih na jedinstven način opisuje određeni element ljudske osobnosti. Uz ovih 5, poznat je i velik broj drugih osobina, ali ovih 5 je izabrano na način da u idealnom slučaju u potpunosti definiraju osobnost neke osobe i razlikuju je od osobnosti drugih pojedinaca.
 
@@ -374,7 +374,7 @@ Kao izlaznu varijablu proizvoljno smo odabrali neuroticizam, a pregledavajući z
 Kako bismo mogli bolje uočiti potencijalnu vezu dviju varijabli, uzet ćemo poduzorak našeg ulaznog skupa.
 
 
-```{r}
+```{r,  out.width= "65%"}
 big_five_scores1 = bigfive[sample(nrow(bigfive),2000),]
 smoothScatter(bigfive$extraversion_score, bigfive$neuroticism_score)
 plot(big_five_scores1$extraversion_score, big_five_scores1$neuroticism_score)
@@ -384,17 +384,17 @@ Scatter plot pokazuje da postoji negativan efekt varijable extraversion_score na
 $$Y = \beta_0 + \beta_1x_1 + \epsilon$$
 Pritom pretostavljamo da je epsilon normalno distribuirana slučajna varijabla (pogreška) s homogenom i nezavisnom varijancom.
 
-```{r}
+```{r,  out.width= "65%"}
 fit.neuroticism = lm(neuroticism_score ~ extraversion_score, data = big_five_scores1)
 plot(big_five_scores1$extraversion_score, big_five_scores1$neuroticism_score)
 lines(big_five_scores1$extraversion_score, fit.neuroticism$fitted.values, col = "red")
 ```
 
-##Provjera pretpostavki
+## Provjera pretpostavki
 
 Sada ćemo provjeriti pretpostavke o normalnosti reziduala i homogenosti varijance. To ćemo učiniti grafički pomoću histograma i q-q plota te statističkim testovima - Kolmogorov-Smirnovljev test i Lillieforsova korekcija.
 
-```{r}
+```{r,  out.width= "65%"}
 #grafički prikazi
 hist(rstandard(fit.neuroticism), probability = TRUE, breaks = 30) 
 y <- seq(min(rstandard(fit.neuroticism)), max(rstandard(fit.neuroticism)), 0.01)
@@ -404,7 +404,7 @@ qqline(rstandard(fit.neuroticism)) # q-q plot pokazuje da se kvantili uzoračke 
 plot(fit.neuroticism$fitted.values,fit.neuroticism$residuals)  #nema naznake nehomogenosti pogreške
 ```
 
-```{r}
+```{r,  out.width= "65%"}
 #normalnost reziduala - statistički testovi
 ks.test(rstandard(fit.neuroticism), "pnorm")
 require(nortest)
@@ -424,7 +424,7 @@ summary(fit.neuroticism)
 Osim ekstraverzije kao potencijalne osobine iz koje bismo mogli nešto zaključiti o neuroticizmu osobe, pokazalo se da bi još jedna osobina u Big Five modelu mogla objašnjavati rezultat koji osoba postiže na neuroticizmu, a to je savjesnost. To možemo interpretirati time da osobe koje su nediscplinirane, neuredne i nemaju rutinu mogu biti sklonije neurotičnom ponašanju od savjesnih i organiziranih ljudi.
 
 
-```{r}
+```{r,  out.width= "65%"}
 plot(big_five_scores1$conscientiousness_score, big_five_scores1$neuroticism_score)
 smoothScatter(bigfive$conscientiousness_score, bigfive$neuroticism_score)
 ```
@@ -432,7 +432,7 @@ smoothScatter(bigfive$conscientiousness_score, bigfive$neuroticism_score)
 Iz scatter plota možemo uočiti naznaku negativne korelacije, odnosno zavisnosti dviju varijabli što odgovara našoj početnoj tezi. Kako bismo kvantificirali navedenu korelaciju, možemo izračunati Pearsonov korelacijski koeficijent za ove dvije varijable, a dodatno možemo pogledati korelacijsku tablicu svih 5 faktora što će nam pomoći i u kreiranju modela višestruke regresije i provjere njenih prepostavki.
 
 
-```{r}
+```{r,  out.width= "65%"}
 correlations <- cor(cbind(big_five_scores1$agreeable_score,big_five_scores1$extraversion_score, big_five_scores1$openness_score, big_five_scores1$conscientiousness_score, big_five_scores1$neuroticism_score))
 colnames(correlations) <- c("agreeable_score", "extraversion_score", "openness_score", "conscientiousness_score", "neuroticism_score")
 rownames(correlations) <- c("agreeable_score", "extraversion_score", "openness_score", "conscientiousness_score", "neuroticism_score")
@@ -442,7 +442,7 @@ cor.test(big_five_scores1$extraversion_score, big_five_scores1$neuroticism_score
 ```
 Iz korelacijske tablice naslućujemo da postoji određena veza između varijabli neuroticism_score i conscientiousness_score. Ono što također možemo uočiti je da nema kršenja pretpostavki, tj. da nema značajne korelacije između dviju varijabli extraversion_score i conscientiousness_score što nam ujedno pokazuje i t-test.
 
-```{r}
+```{r,  out.width= "65%"}
 fit.multi = lm(neuroticism_score ~ conscientiousness_score, data=bigfive)
 plot(fit.multi$fitted.values, fit.multi$residuals)
 hist(rstandard(fit.multi))
@@ -469,7 +469,7 @@ Vidimo da su opet svi koeficijenti signifikantni do na bilo koju razinu značajn
 Najveći efekt na izlaznu varijablu imaju regresori extraversion_score i conscientiousness_score.
 
 
-####Karakteristike prema spolu ispitanika
+#### Karakteristike prema spolu ispitanika
 Postoje li razlike u karakteristikama prema spolu ispitanika? Možemo li temeljem nekih drugih varijabli odrediti spol ispitanika? Želimo ispitati da li postoje dovoljne razlike između razultata testiranja između pripadnika ratličitih spolova da bi mogli na temelju rezultata ispitivanja odrediti da li je test riješavala žena ili muškarac.
 
 Kako bi znali predvidjeti spol ispitanika, možemo ispitati različite varijable koje bi mogle utjecati na spol:
@@ -488,7 +488,7 @@ male_subjects = bigfive[bigfive$sex == 1 ,]
 female_subjects = bigfive[bigfive$sex == 2 ,]
 ```
 Zatim možemo usporediti srednje vrijednosti za 5 kategorija kako bi uočili po kojim karateristikama se naviše razlikuju spolovi:
-```{r}
+```{r,  out.width= "65%"}
 cat("Razlika između srednji vrijednosti:\n")
 
 srednja_vrijednost <- matrix(c(mean(female_subjects$neuroticism_score), mean(male_subjects$neuroticism_score),mean(female_subjects$extraversion_score), mean(male_subjects$extraversion_score),mean(female_subjects$agreeable_score), mean(male_subjects$agreeable_score),mean(female_subjects$conscientiousness_score), mean(male_subjects$conscientiousness_score),mean(female_subjects$openness_score), mean(male_subjects$openness_score)),ncol=2)
@@ -508,7 +508,7 @@ print(varijance)
 Nakon što usporedimo srednje vrijednosti prema svih 5 faktora, može se uočiti da između nekih postoji veća, odnosno manja razlika. Iako razlike nisu velike želimo ispitati da li je moguće procjeniti spol na temelju ovih faktora. Također najveća razlika se uočava između neurocizma, ugodnosti i otvorenosti. Dok je između savjesnosti i ekstraverzije gotovo zanemariva. Prikazali smo podatke grafički kako bi provjerili njihovu normalnost, te pokušali uočiti vizualne karakteristike.
 
 ## Vizualizacija podataka
-```{r}
+```{r,  out.width= "65%"}
 boxplot(male_subjects$openness_score, female_subjects$openness_score, 
         names = c('Male subjects\'openness_score','Female subjects\' openness_score'),
         main='Boxplot of male and female subjects\' openness_score')
@@ -527,14 +527,14 @@ Na ovom skupo podataka možemo uočiti razliku u srednjoj vrijednosti neurocizma
 
 Sljedeći korak je provjeriti normalnost podataka koju najčešće provjeravamo: histgoramom, qq-plotom te KS-testom (kojim provjeravamo pripadnost podataka distribuciji). Sljedeće testove radimo samo za neuroticizam uz pretpostavku da se za ostale faktore podaci slično ponšaju.
 
-```{r, fig.width = 14, fig.height=5}
+```{r,  out.width= "65%"}
 hist(male_subjects$neuroticism_score,main='Male neuroticsm score histogram', xlab='value', ylab='Frequency')
 hist(female_subjects$neuroticism_score,main='Female neuroticsm score histogram', xlab='value', ylab='Frequency')
 ```
 
 Histogrami upućuju na normalnost podataka. Normalnost možemo još provjeriti i qqplot-ovima ili testom koji ispituje normalnost.
 
-```{r}
+```{r,  out.width= "65%"}
 qqnorm(male_subjects$neuroticism_score, pch = 1, frame = FALSE,main='Male subjects')
 qqline(male_subjects$neuroticism_score, col = "steelblue", lwd = 2)
 
@@ -605,7 +605,7 @@ data = bigfive
 data$sex = data$sex -1
 ```
 
-```{r}
+```{r,  out.width= "65%"}
 require(caret)
 
 model = glm(sex ~ agreeable_score + extraversion_score + openness_score + conscientiousness_score + neuroticism_score, data = data, family = binomial())
@@ -616,7 +616,7 @@ Rsq
 ```
 Možemo uočiti da svaki score podjednako signifikantan, te provodimo analizu modela.
 
-```{r analiza modela}
+```{r analiza modela,  out.width= "65%"}
 
 yHat <- model$fitted.values > 0.5
 tab <- table(data$sex, yHat)
@@ -637,3 +637,5 @@ specificity
 Model daje točnost od 0.6883763, što je bolje od slučajnog pogađanja spola. Međutim ne možemo tvrditi sa velikom vjerojatnosti da na temelju samo rezultata ispitivanja možemo predvidjeti spol. 
 
 # Zaključak
+
+
