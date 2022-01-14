@@ -361,7 +361,14 @@ summary(a)
 
 Na osnovu p vrijednosti od 0.00167 odbacujem nultu hipotezu u korist alternative da očekivanje razine savjesnosti nije isto za svaku odabranu regiju.
 
-##Motivacija: Možemo li zaključiti nešto o jednoj osobini uzimajući kao ulazne varijable jednu ili više preostalih osobina?
+
+
+
+
+
+
+
+# Motivacija: Možemo li zaključiti nešto o jednoj osobini uzimajući kao ulazne varijable jednu ili više preostalih osobina?
 
 Ono što očekujemo je da ne bi smjela postojati visoka korelacija između pojedinih osobina ličnosti pošto svaka od njih na jedinstven način opisuje određeni element ljudske osobnosti. Uz ovih 5, poznat je i velik broj drugih osobina, ali ovih 5 je izabrano na način da u idealnom slučaju u potpunosti definiraju osobnost neke osobe i razlikuju je od osobnosti drugih pojedinaca.
 
@@ -498,7 +505,7 @@ Iz grafičkog prikaza i KS-testa zaključujemo da nema kršenja pretpostavke nor
 
 
 
-####karakteristike prema spolu ispitanika
+#### Karakteristike prema spolu ispitanika
 Postoje li razlike u karakteristikama prema spolu ispitanika? Možemo li temeljem nekih drugih varijabli odrediti spol ispitanika? Želimo ispitati postoje li dovoljne razlike između rezultata testiranja između pripadnika različitih spolova da bi mogli na temelju rezultata ispitivanja odrediti je li test rješavala žena ili muškarac.
 
 Kako bismo mogli predvidjeti spol ispitanika, možemo ispitati različite varijable koje bi mogle utjecati na spol:
@@ -592,11 +599,11 @@ qqline(female_subjects$neuroticism_score, col = "steelblue", lwd = 2)
 Uzorački kvantili uglavnom se slažu s teorijskim kvantilima normalne distribucije osim u repovima distribucije gdje postoje manja odstupanja.
 
 
-# Testiranje normalnosti - Lillieforsova inačica Kolmogomorov-Smirnovljevog testa
+# Testiranje normalnosti - Lillieforsova inačica Kolmogorov-Smirnovljevog testa
 
 Hipoteze:
 
-H_0: distribucija male_subjects$neuroticism_score pripada normalnoj razdiobi
+H_0: distribucija male_subjects$neuroticism_score pripada normalnoj razdiobi 
 H_1: distribucija male_subjects$neuroticism_score NE pripada normalnoj razdiobi
 
 ```{r}
@@ -615,7 +622,7 @@ S obzirom da je p-vrijednost < \(\alpha\), odbacujemo nultu hipotezu u korist al
 
 # Testiranje jednakosti varijanci neuroticizma za muške/ženske ispitanike
 
-Pretpostavljam nezavisnost uzoraka i izvodim f-test.
+Pretpostavljam nezavisnost uzoraka i izvodim F-test.
 
 Hipoteze:
 
@@ -627,13 +634,14 @@ var.test(male_subjects$neuroticism_score, female_subjects$neuroticism_score)
 Na osnovu male p vrijednosti odbacujem nultu hipotezu u korist alternative da su varijance distribucije različite.
 
 # Testiranje jednakosti srednjih vrijednosti neuroticizma za muške/ženske ispitanike
-Kako bismo mogli provoditi t-test uzorci moraju biti nezavisni i dolaziti iz normalne distribucije. Nezavisnost možemo utvrditi sa sigurnošću pošto je svaki ispitanik neovisan o drugom, odnosno svaki čovjek je zaseban pojedinac te njegovi rezultati ne ovise o rezultatima drugog pojedinca. Normalnost podataka smo ispitali histogramima, qqplotovima i statističkim testovima.
+Kako bismo mogli provoditi t-test uzorci moraju biti nezavisni i dolaziti iz normalne distribucije. Nezavisnost možemo utvrditi sa sigurnošću pošto je svaki ispitanik neovisan o drugom, odnosno svaki čovjek je zaseban pojedinac te njegovi rezultati ne ovise o rezultatima drugog pojedinca. Normalnost podataka smo ispitali histogramima, qq-plotovima i statističkim testovima.
 
 Koristimo t-test i pretpostavljamo nezavisnost varijabli i nejednakost varijanci.
 
 Hipoteze:
 
-$$H_0: \mu_{Female} = \mu_{Male}  \\ H_1: \mu_{Female} > \mu_{male}  $$
+$$H_0: \mu_{Female} = \mu_{Male}  $$
+$$H_1: \mu_{Female} > \mu_{male}  $$
 
 ```{r}
 t.test(female_subjects$neuroticism_score ,male_subjects$neuroticism_score, alt = "greater", var.equal = FALSE)
