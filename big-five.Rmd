@@ -108,7 +108,8 @@ Testiranje jednakosti varijanci provodi se F testom. Pretpostavlja se nezavisnos
 
 Hipoteze:
 
-$$H_0: \sigma^2_{old} = \sigma^2_{young}  \\ H_1: \sigma^2_{old} \neq \sigma^2_{young}  $$
+$$H_0: \sigma^2_{old} = \sigma^2_{young} $$
+$$ H_1: \sigma^2_{old} \neq \sigma^2_{young}  $$
 ```{r}
 var.test(old_subjects$openness_score, young_subjects$openness_score)
 ```
@@ -123,7 +124,8 @@ Testiranje jednakosti srednjih vrijednosti otvorenosti za stare i mlade ispitani
 
 Hipoteze:
 
-$$H_0: \mu_{old} = \mu_{young}  \\ H_1: \mu_{old} \neq \mu_{young}  $$
+$$H_0: \mu_{old} = \mu_{young}$$
+$$ H_1: \mu_{old} \neq \mu_{young}  $$
 
 ```{r}
 t.test(old_subjects$openness_score, young_subjects$openness_score, alt = "two.sided", var.equal = FALSE)
@@ -237,7 +239,8 @@ Pretpostavljam nezavisnost uzoraka i izvodim F test.
 
 Hipoteze:
 
-$$H_0: \sigma^2_{east Asia} = \sigma^2_{rest}  \\ H_1: \sigma^2_{east Asia} \neq \sigma^2_{rest}  $$
+$$H_0: \sigma^2_{east Asia} = \sigma^2_{rest}$$
+$$H_1: \sigma^2_{east Asia} \neq \sigma^2_{rest}  $$
 ```{r}
 var.test(east_asia$conscientiousness_score, rest_regions$conscientiousness_score)
 ```
@@ -250,7 +253,8 @@ Koristim T test i pretpostavljam nezavisnost varijabli i različitost varijanci 
 
 Hipoteze:
 
-$$H_0: \mu_{eastAsia} = \mu_{rest}  \\ H_1: \mu_{eastAsia} > \mu_{rest}  $$
+$$H_0: \mu_{eastAsia} = \mu_{rest}$$ 
+$$ H_1: \mu_{eastAsia} > \mu_{rest}  $$
 
 ```{r}
 t.test(east_asia$conscientiousness_score,rest_regions$conscientiousness_score, alt = "greater", var.equal = FALSE)
@@ -615,7 +619,8 @@ Pretpostavljam nezavisnost uzoraka i izvodim f-test.
 
 Hipoteze:
 
-$$H_0: \sigma^2_{Male} = \sigma^2_{Female}  \\ H_1: \sigma^2_{Male} \neq \sigma^2_{Female}  $$
+$$H_0: \sigma^2_{Male} = \sigma^2_{Female}$$
+$$H_1: \sigma^2_{Male} \neq \sigma^2_{Female}  $$
 ```{r}
 var.test(male_subjects$neuroticism_score, female_subjects$neuroticism_score)
 ```
