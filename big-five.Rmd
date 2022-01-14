@@ -357,132 +357,164 @@ summary(a)
 
 Na osnovu p vrijednosti od 0.00167 odbacujem nultu hipotezu u korist alternative da očekivanje razine savjesnosti nije isto za svaku odabranu regiju.
 
-## Motivacija: Možemo li zaključiti nešto o jednoj osobini uzimajući kao ulazne varijable jednu ili više ostalih osobina?
+##Motivacija: Možemo li zaključiti nešto o jednoj osobini uzimajući kao ulazne varijable jednu ili više preostalih osobina?
 
-Ono što pritom očekujemo je da ne bi smjela postojati visoka korelacija između pojedinih osobina ličnosti pošto svaka od njih na jedinstven način opisuje određeni element ljudske osobnosti. Uz ovih 5, poznat je i velik broj drugih osobina, ali ovih 5 je izabrano na način da u idealnom slučaju u potpunosti definiraju osobnost neke osobe i razlikuju je od osobnosti drugih pojedinaca.
+Ono što očekujemo je da ne bi smjela postojati visoka korelacija između pojedinih osobina ličnosti pošto svaka od njih na jedinstven način opisuje određeni element ljudske osobnosti. Uz ovih 5, poznat je i velik broj drugih osobina, ali ovih 5 je izabrano na način da u idealnom slučaju u potpunosti definiraju osobnost neke osobe i razlikuju je od osobnosti drugih pojedinaca.
 
-Kao izlaznu varijablu proizvoljno smo odabrali neuroticizam, a pregledavajući znanstvenu literaturu došli smo do zaključka da bi ekstraverzija mogla u najvećoj mjeri objasniti varijaciju u neuroticizmu što i ima smisla jer osobe koje su introverti teže artikuliraju svoje emocije te su skloniji anksioznosti i depresiji.
+Kao izlaznu varijablu proizvoljno smo odabrali neuroticizam, a pregledavajući znanstvenu literaturu došli smo do zaključka da bi ekstraverzija mogla u najvećoj mjeri objasniti varijaciju u neuroticizmu što donekle i ima smisla jer osobe koje su introverti teže artikuliraju svoje emocije te su skloniji anksioznosti i depresiji.
 
-Kako bismo mogli bolje uočiti potencijalnu vezu dviju varijabli, uzet ćemo poduzorak našeg ulaznog skupa.
+Kako bismo mogli bolje uočiti potencijalnu vezu dviju varijabli, uzet ćemo slučajan poduzorak našeg ulaznog skupa podataka.
 
 
-```{r,  out.width= "65%"}
-big_five_scores1 = bigfive[sample(nrow(bigfive),2000),]
+```{r}
+bigfive1 = bigfive[sample(nrow(bigfive),2000),]
+plot(bigfive1$extraversion_score, bigfive1$neuroticism_score)
 smoothScatter(bigfive$extraversion_score, bigfive$neuroticism_score)
-plot(big_five_scores1$extraversion_score, big_five_scores1$neuroticism_score)
+
 ```
 
-Scatter plot pokazuje da postoji negativan efekt varijable extraversion_score na izlaznu varijablu neuroticism_score. Zato ćemo pokušati kreirati model jednostavne regresije koji uključuje spomenute varijable:
+Scatter plot pokazuje da postoji negativan efekt varijable extraversion_score na izlaznu varijablu neuroticism_score, odnosno osobe koje postiže nizak score na ekstraverziji, postižu visok score na neuroticizmu.
+Zato ćemo pokušati kreirati model jednostavne regresije koji uključuje spomenute varijable:
 $$Y = \beta_0 + \beta_1x_1 + \epsilon$$
-Pritom pretostavljamo da je epsilon normalno distribuirana slučajna varijabla (pogreška) s homogenom i nezavisnom varijancom.
+Pritom pretostavljamo da je \(\epsilon\) normalno distribuirana slučajna varijabla (pogreška) s homogenom varijancom te da su pritom \(\epsilon\) 1, \(\epsilon\) 2, ..., \(\epsilon\) n međusobno nezavisne, odnosno nekorelirane slučajne varijable.
 
-```{r,  out.width= "65%"}
-fit.neuroticism = lm(neuroticism_score ~ extraversion_score, data = big_five_scores1)
-plot(big_five_scores1$extraversion_score, big_five_scores1$neuroticism_score)
-lines(big_five_scores1$extraversion_score, fit.neuroticism$fitted.values, col = "red")
+```{r}
+fit.neuroticism = lm(neuroticism_score ~ extraversion_score, data = bigfive)
+smoothScatter(bigfive$extraversion_score, bigfive$neuroticism_score)
+lines(bigfive$extraversion_score, fit.neuroticism$fitted.values, col = "red")
+
 ```
-
-## Provjera pretpostavki
-
 Sada ćemo provjeriti pretpostavke o normalnosti reziduala i homogenosti varijance. To ćemo učiniti grafički pomoću histograma i q-q plota te statističkim testovima - Kolmogorov-Smirnovljev test i Lillieforsova korekcija.
 
-```{r,  out.width= "65%"}
-#grafički prikazi
+```{r}
 hist(rstandard(fit.neuroticism), probability = TRUE, breaks = 30) 
 y <- seq(min(rstandard(fit.neuroticism)), max(rstandard(fit.neuroticism)), 0.01)
-lines(y, dnorm(y, mean(rstandard(fit.neuroticism)), sd(rstandard(fit.neuroticism))), col = "red", lwd = 3) # Iz histograma se može naslutiti normalna distribucija. Vidimo da se graf funkcije gustoće vjerojatnosti normalne slučajne varijable s parametrima uzoračke distribucije prilično dobro podudara s funkcijom gustoće vjerojatnosti varijable neuroticism_score.
-qqnorm(rstandard(fit.neuroticism))  
-qqline(rstandard(fit.neuroticism)) # q-q plot pokazuje da se kvantili uzoračke distribucije u velikoj mjeri slažu s teorijskim kvantilima normalne distribucije. U repovima distribucije postoje manja odstupanja što možemo objasniti mogućim postojanjem outliera.
-plot(fit.neuroticism$fitted.values,fit.neuroticism$residuals)  #nema naznake nehomogenosti pogreške
+lines(y, dnorm(y, mean(rstandard(fit.neuroticism)), sd(rstandard(fit.neuroticism))), col = "red", lwd = 3) 
 ```
+Iz histograma se može naslutiti normalna distribucija. Vidimo da se graf funkcije gustoće vjerojatnosti normalne slučajne varijable s parametrima uzoračke distribucije prilično dobro podudara s funkcijom gustoće vjerojatnosti varijable neuroticism_score.
 
-```{r,  out.width= "65%"}
-#normalnost reziduala - statistički testovi
+```{r}
+qqnorm(rstandard(fit.neuroticism))  
+qqline(rstandard(fit.neuroticism))
+```
+q-q plot pokazuje da se kvantili uzoračke distribucije u velikoj mjeri slažu s teorijskim kvantilima normalne distribucije. U repovima distribucije postoje manja odstupanja što možemo objasniti mogućim postojanjem outliera.
+
+```{r}
+smoothScatter(fit.neuroticism$fitted.values, rstandard(fit.neuroticism))
+```
+Iz scatter plota koji pokazuje standardizirane reziduale u odnosu na procjene modela uočavamo da nema naznake nehomogenosti pogreške.
+
+```{r}
 ks.test(rstandard(fit.neuroticism), "pnorm")
 require(nortest)
 lillie.test(rstandard(fit.neuroticism))
-shapiro.test(rstandard(fit.neuroticism))
 ```
+Iz p vrijednost KS-testa možemo zaključiti da uz nivo značajnosti od 5% ne možemo odbaciti nultu hipotezu o normalnosti, dok iz Lillieforsove inačice možemo izvući isti zaključak. 
 
-Iz p vrijednost KS-testa možemo zaključiti da uz nivo značajnosti od 5% ne možemo odbaciti nultu hipotezu o normalnosti, dok iz Lillieforsove inačice možemo zaključiti da uz isti nivo značajnosti možemo odbaciti nultu hipotezu. U ovom slučaju, pošto testiramo populaciju nepoznatog očekivanja i varijance, veću važnost pridajemo drugom testu koji je ujedno i stroži od KS testa. Pošto su t-testovi koji se koriste u analizi regresijskog modela robusni na nenormalnost, a i pošto p vrijednost koju testom dobijemo nije daleko od razine značajnosti možemo nastaviti dalje s regresijskom analizom.
+Važno je napomenuti da u ovom slučaju KS-test je bolji izbor s obzirom da standardizacijom reziduala njihovo teoretsko očekivanje je nula i varijanca jedan. Mi u ovom slučaju KS-testom uspoređujemo uzoračku distribuciju s jediničnom normalnom razdiobom. Lillieforsova inačica dizajnirana je više za slučaj kada ne poznajemo ni varijancu ni očekivanje varijabli, već ih procjenjujemo iz uzorka.
 
 ```{r}
+fit.neuroticism = lm(neuroticism_score ~ extraversion_score, data = bigfive)
 summary(fit.neuroticism)
-# t-test --> koeficijenti su signifikantni
-# f-test --> Cijeli model je signifikantan
-# zaključak o R2?
 ```
+Iz p vrijednost t testova možemo zaključiti da su oba koeficijenta statistički značajna uz bilo koju razinu značajnosti. Uz to f test je pokazao da je i cijeli model signifikantan. Ipak, nizak koeficijent determinacije pokazuje da je jako mali dio promjena zavisne varijable, konkretno 17.84% objašnjeno dobivenim modelom jednostavne linearne regresije.
 
 Osim ekstraverzije kao potencijalne osobine iz koje bismo mogli nešto zaključiti o neuroticizmu osobe, pokazalo se da bi još jedna osobina u Big Five modelu mogla objašnjavati rezultat koji osoba postiže na neuroticizmu, a to je savjesnost. To možemo interpretirati time da osobe koje su nediscplinirane, neuredne i nemaju rutinu mogu biti sklonije neurotičnom ponašanju od savjesnih i organiziranih ljudi.
 
 
-```{r,  out.width= "65%"}
-plot(big_five_scores1$conscientiousness_score, big_five_scores1$neuroticism_score)
-smoothScatter(bigfive$conscientiousness_score, bigfive$neuroticism_score)
+```{r}
+plot(bigfive1$conscientiousness_score, bigfive1$neuroticism_score)
 ```
 
 Iz scatter plota možemo uočiti naznaku negativne korelacije, odnosno zavisnosti dviju varijabli što odgovara našoj početnoj tezi. Kako bismo kvantificirali navedenu korelaciju, možemo izračunati Pearsonov korelacijski koeficijent za ove dvije varijable, a dodatno možemo pogledati korelacijsku tablicu svih 5 faktora što će nam pomoći i u kreiranju modela višestruke regresije i provjere njenih prepostavki.
 
 
-```{r,  out.width= "65%"}
-correlations <- cor(cbind(big_five_scores1$agreeable_score,big_five_scores1$extraversion_score, big_five_scores1$openness_score, big_five_scores1$conscientiousness_score, big_five_scores1$neuroticism_score))
+```{r}
+
+correlations <- cor(cbind(bigfive$agreeable_score,bigfive$extraversion_score, bigfive$openness_score, bigfive$conscientiousness_score, bigfive$neuroticism_score))
+
 colnames(correlations) <- c("agreeable_score", "extraversion_score", "openness_score", "conscientiousness_score", "neuroticism_score")
 rownames(correlations) <- c("agreeable_score", "extraversion_score", "openness_score", "conscientiousness_score", "neuroticism_score")
+
 library(corrplot)
 corrplot(correlations, method = "number")
-cor.test(big_five_scores1$extraversion_score, big_five_scores1$neuroticism_score)
-```
-Iz korelacijske tablice naslućujemo da postoji određena veza između varijabli neuroticism_score i conscientiousness_score. Ono što također možemo uočiti je da nema kršenja pretpostavki, tj. da nema značajne korelacije između dviju varijabli extraversion_score i conscientiousness_score što nam ujedno pokazuje i t-test.
 
-```{r,  out.width= "65%"}
-fit.multi = lm(neuroticism_score ~ conscientiousness_score, data=bigfive)
-plot(fit.multi$fitted.values, fit.multi$residuals)
-hist(rstandard(fit.multi))
-ks.test(rstandard(fit.multi), "pnorm")
-lillie.test(rstandard(fit.multi))
+cor.test(bigfive$extraversion_score, bigfive$neuroticism_score)
+
 ```
 
-Iz grafičkog prikaza i testova zaključujemo da nema kršenja pretpostavke normalnosti reziduala.
+Iz korelacijske tablice naslućujemo da postoji određena veza između varijabli neuroticism_score i conscientiousness_score. Ono što također možemo uočiti je da nema kršenja pretpostavki, tj. da nema značajne korelacije između dviju varijabli extraversion_score i conscientiousness_score što nam ujedno pokazuje i t-test Pearsonovog korelacijskog koeficijenta tih dviju varijabli.
 
 ```{r}
 fit.neuroticism_m = lm(neuroticism_score ~ extraversion_score + conscientiousness_score, bigfive)
 summary(fit.neuroticism_m)
 ```
-Iz modela multivarijantne regresije možemo uočiti da su svi koeficijenti signifikantni uz bilo koju razinu značajnosti. Također, koeficijent determinacije se povećao u odnosu na model jednostavne regresije što znači da je conscientiousness_score doprinio poboljšanju funkcije ovisnosti izlazne varijable o regresorima, odnosno da je veća proporcija varijacije varijable Y objašnjena ovim modelom u odnosu na prošli.
 
-
-Možemo probati uključiti i preostala dva faktora u model.
+Iz modela multivarijantne regresije možemo uočiti da su svi koeficijenti, a uz to i sam model signifikantni uz bilo koju razinu značajnosti. Također, koeficijent determinacije se povećao u odnosu na model jednostavne regresije što znači da je conscientiousness_score doprinio poboljšanju funkcije ovisnosti izlazne varijable o regresorima, odnosno da je veća proporcija varijacije varijable Y objašnjena ovim modelom.
 
 ```{r}
-fit.multi = lm(neuroticism_score ~ extraversion_score + conscientiousness_score + agreeable_score + openness_score, bigfive[bigfive$age > 20,])
+hist(rstandard(fit.neuroticism_m))
+ks.test(rstandard(fit.neuroticism_m), "pnorm")
+```
+Iz grafičkog prikaza i KS-testa zaključujemo da nema kršenja pretpostavke normalnosti reziduala.
+
+
+Možemo probati uključiti i preostala dva faktora u model multivarijantne regresije.
+```{r}
+fit.multi = lm(neuroticism_score ~ extraversion_score + conscientiousness_score + agreeable_score + openness_score, bigfive)
 summary(fit.multi)
 ```
-Vidimo da su opet svi koeficijenti signifikantni do na bilo koju razinu značajnosti. Povećanje koeficijenta determinacije postoji, ali je zanemarivo pa možemo zaključiti da dodani faktori ne objašnjavaju u značajnijoj mjeri neobjašnjenu varijaciju modela s postojeća dva faktora.
-Najveći efekt na izlaznu varijablu imaju regresori extraversion_score i conscientiousness_score.
+
+Vidimo da su opet svi koeficijenti kao i sam model signifikantni do na bilo koju razinu značajnosti. Uz to, iz procjena nepoznatih parametara zaključujemo da najveći efekt na izlaznu varijablu imaju regresori extraversion_score i conscientiousness_score. Povećanje koeficijenta determinacije postoji, ali je zanemarivo pa možemo zaključiti da dodani faktori ne objašnjavaju u značajnijoj mjeri neobjašnjenu varijaciju modela s postojeća dva faktora. Ono što bismo u ovom slučaju očekivali je da se prilagođeni koefcijent determinacije koji penalizira dodatne parametre smanji, ali pošto se radi o jako velikom uzorku izostao je takav efekt.
 
 
-#### Karakteristike prema spolu ispitanika
-Postoje li razlike u karakteristikama prema spolu ispitanika? Možemo li temeljem nekih drugih varijabli odrediti spol ispitanika? Želimo ispitati da li postoje dovoljne razlike između razultata testiranja između pripadnika ratličitih spolova da bi mogli na temelju rezultata ispitivanja odrediti da li je test riješavala žena ili muškarac.
+```{r}
+hist(rstandard(fit.multi))
+ks.test(rstandard(fit.multi), "pnorm")
+```
+Iz grafičkog prikaza i KS-testa zaključujemo da nema kršenja pretpostavke normalnosti reziduala.
 
-Kako bi znali predvidjeti spol ispitanika, možemo ispitati različite varijable koje bi mogle utjecati na spol:
+
+Sada ćemo pokušati primijeniti isti model na muškarce starije od 22 godina.
+```{r}
+fit.multi = lm(neuroticism_score ~ extraversion_score + conscientiousness_score + agreeable_score + openness_score, bigfive[bigfive$sex == 1 & bigfive$age > 22,])
+
+summary(fit.multi)
+```
+Signifikantnost koeficijenata i modela ostala je statistički značajna, ali vidimo da se koeficijent determinacije povećao. Razlog tome je što se za osobnost mladih ljudi smatra da je još u razvoju te je sukladno tome sklona većim varijacijama od one kod starijih ljudi (https://www.tandfonline.com/doi/abs/10.1080/10478401003596626).
+Uz to, pokazalo se da ukoliko se promatraju samo ispitanici muškog spola, da model još bolje objašnjava varijaciju izlazne varijable.
+
+```{r}
+hist(rstandard(fit.multi))
+ks.test(rstandard(fit.multi), "pnorm")
+```
+Iz grafičkog prikaza i KS-testa zaključujemo da nema kršenja pretpostavke normalnosti reziduala.
+
+
+
+
+
+####karakteristike prema spolu ispitanika
+Postoje li razlike u karakteristikama prema spolu ispitanika? Možemo li temeljem nekih drugih varijabli odrediti spol ispitanika? Želimo ispitati postoje li dovoljne razlike između rezultata testiranja između pripadnika različitih spolova da bi mogli na temelju rezultata ispitivanja odrediti je li test rješavala žena ili muškarac.
+
+Kako bismo mogli predvidjeti spol ispitanika, možemo ispitati različite varijable koje bi mogle utjecati na spol:
 
 - Neuroticism_score
 - Agreeableness_score
 - Conscientiousness_score
 - Extraversion_score
 - Openness/Intellect
-- age i slično
+- Age 
 
-Prvi korak je razvrstati podatke u dvije grupe muške i ženske konkretno u ovome skupu 1 predstavlja muški spol, dok 2 predstvavlje ženski spol.
+Prvi korak je razvrstati podatke u dvije grupe - muškarci i žene. Konkretno u ovome skupu 1 predstavlja muški spol, dok 2 predstvlja ženski spol.
 
 ```{r}
 male_subjects = bigfive[bigfive$sex == 1 ,]
 female_subjects = bigfive[bigfive$sex == 2 ,]
 ```
-Zatim možemo usporediti srednje vrijednosti za 5 kategorija kako bi uočili po kojim karateristikama se naviše razlikuju spolovi:
+Zatim možemo usporediti srednje vrijednosti za 5 kategorija kako bi uočili po kojim karateristikama se najviše razlikuju spolovi:
 ```{r,  out.width= "65%"}
 cat("Razlika između srednji vrijednosti:\n")
-
 srednja_vrijednost <- matrix(c(
   mean(female_subjects$neuroticism_score),
   mean(female_subjects$extraversion_score),
@@ -498,8 +530,6 @@ colnames(srednja_vrijednost) <- c("Žene","Muškarci")
 rownames(srednja_vrijednost) <- c("neuroticism_score","extraversion_score","agreeable_score", "conscientiousness_score", "openness_score")
 srednja_vrijednost <- as.table(srednja_vrijednost)
 print(srednja_vrijednost)
-
-
 cat("\nRazlika između varijanci:\n")
 varijance <- matrix(c(
   var(female_subjects$neuroticism_score),
@@ -516,16 +546,14 @@ colnames(varijance) <- c("Žene", "Muškarci")
 rownames(varijance) <- c("neuroticism_score","extraversion_score","agreeable_score", "conscientiousness_score", "openness_score")
 varijance <- as.table(varijance)
 print(varijance)
-
 ```
-Nakon što usporedimo srednje vrijednosti prema svih 5 faktora, može se uočiti da između nekih postoji veća, odnosno manja razlika. Iako razlike nisu velike želimo ispitati da li je moguće procjeniti spol na temelju ovih faktora. Također najveća razlika se uočava između neurocizma, ugodnosti i otvorenosti. Dok je između savjesnosti i ekstraverzije gotovo zanemariva. Prikazali smo podatke grafički kako bi provjerili njihovu normalnost, te pokušali uočiti vizualne karakteristike.
+Nakon što usporedimo srednje vrijednosti prema svih 5 faktora, može se uočiti da između nekih postoji veća, odnosno manja razlika. Iako razlike nisu velike želimo ispitati postoji li mogućnost procjene spola na temelju ovih faktora. Također, najveća razlika se uočava između neuroticizma, ugodnosti i otvorenosti dok je između savjesnosti i ekstraverzije ona gotovo zanemariva. Prikazali smo podatke grafički kako bismo provjerili njihovu normalnost te pokušali uočiti vizualne karakteristike.
 
 ## Vizualizacija podataka
-```{r,  out.width= "65%"}
+```{r}
 boxplot(male_subjects$openness_score, female_subjects$openness_score, 
         names = c('Male subjects\'openness_score','Female subjects\' openness_score'),
         main='Boxplot of male and female subjects\' openness_score')
-
 boxplot(male_subjects$neuroticism_score, female_subjects$neuroticism_score, 
         names = c('Male subjects\' neuroticism score','Female subjects\' neuroticism score'),
         main='Boxplot of male and female subjects\' neuroticism_score')
@@ -536,25 +564,28 @@ boxplot(male_subjects$agreeable_score, female_subjects$agreeable_score,
 ```
 
 
-Na ovom skupo podataka možemo uočiti razliku u srednjoj vrijednosti neurocizma između pripadnika ženskog i muškog spola. Stoga postoje indikacije da bi neuroticism_score trebao biti viši kod žena nego muškaraca, pa smo to provjerili pomoću T testa međutim prije samo testa moramo provjeriti nezavisnost i normalnost.
+Možemo uočiti razliku u srednjoj vrijednosti neuroticizma između pripadnika ženskog i muškog spola. Stoga postoje indikacije da bi neuroticism_score trebao biti viši kod žena nego muškaraca pa ćemo tu hipotezu testirati t-testom.
+Prije samog testiranja moramo provjeriti pretpostavke nezavisnosti i normalnosti.
 
-Sljedeći korak je provjeriti normalnost podataka koju najčešće provjeravamo: histgoramom, qq-plotom te KS-testom (kojim provjeravamo pripadnost podataka distribuciji). Sljedeće testove radimo samo za neuroticizam uz pretpostavku da se za ostale faktore podaci slično ponšaju.
+Pošto je u ovom slučaju nezavisnost zadovoljena, sljedeći korak je provjeriti normalnost podataka koju najčešće provjeravamo: histogramom, qq-plotom te KS-testom kojim provjeravamo pripadnost podataka distribuciji. 
 
-```{r,  out.width= "65%"}
+
+Sljedeće testove radimo samo za neuroticizam uz pretpostavku da se za ostale faktore podaci slično ponšaju.
+
+```{r, fig.width = 14, fig.height=5}
 hist(male_subjects$neuroticism_score,main='Male neuroticsm score histogram', xlab='value', ylab='Frequency')
 hist(female_subjects$neuroticism_score,main='Female neuroticsm score histogram', xlab='value', ylab='Frequency')
 ```
+Histogrami upućuju na normalnost podataka.
 
-Histogrami upućuju na normalnost podataka. Normalnost možemo još provjeriti i qqplot-ovima ili testom koji ispituje normalnost.
-
-```{r,  out.width= "65%"}
+```{r}
 qqnorm(male_subjects$neuroticism_score, pch = 1, frame = FALSE,main='Male subjects')
 qqline(male_subjects$neuroticism_score, col = "steelblue", lwd = 2)
 
 qqnorm(female_subjects$neuroticism_score, pch = 1, frame = FALSE,main='Female subjects')
 qqline(female_subjects$neuroticism_score, col = "steelblue", lwd = 2)
 ```
-
+Uzorački kvantili uglavnom se slažu s teorijskim kvantilima normalne distribucije osim u repovima distribucije gdje postoje manja odstupanja.
 
 
 # Testiranje normalnosti - Lillieforsova inačica Kolmogomorov-Smirnovljevog testa
@@ -576,11 +607,11 @@ H_1: distribucija female_subjects$neuroticism_score NE pripada normalnoj razdiob
 ```{r}
 lillie.test(female_subjects$neuroticism_score)
 ```
-S obzirom da je p-vrijednost < \(\alpha\), odbacujem nultu hipotezu u korist alternative da se neuroticizam muških/ženskih ispitanika NE ravna po normalnoj distibuciji, što je suprotno od onoga što smo uočili u grafovima. Uzevši u obzir oblik grafova i veliku osjetljivost Lillieforstovog testa normalnosti, možemo nastaviti testiranje uz pretpostavku normalnosti podataka.
+S obzirom da je p-vrijednost < \(\alpha\), odbacujemo nultu hipotezu u korist alternative da se neuroticizam muških/ženskih ispitanika ne ravna po normalnoj distibuciji, što je suprotno od onoga što smo uočili u grafovima. Uzevši u obzir oblik grafova, osjetljivost Lillieforsovog testa normalnosti i robusnosti t-testa na nenormalnost u slučaju velikog uzorka, možemo nastaviti testiranje uz pretpostavku normalnosti podataka.
 
 # Testiranje jednakosti varijanci neuroticizma za muške/ženske ispitanike
 
-Pretpostavljam nezavisnost uzoraka i izvodim F test.
+Pretpostavljam nezavisnost uzoraka i izvodim f-test.
 
 Hipoteze:
 
@@ -591,9 +622,9 @@ var.test(male_subjects$neuroticism_score, female_subjects$neuroticism_score)
 Na osnovu male p vrijednosti odbacujem nultu hipotezu u korist alternative da su varijance distribucije različite.
 
 # Testiranje jednakosti srednjih vrijednosti neuroticizma za muške/ženske ispitanike
-Kako bi mogli provoditi T test uzorci moraju biti nezavisni i dolaziti iz normalne distribucije. Nezavisnost možemo utvrditi sa sigurnošću pošto je svaki ispitanik neovisan o drugom, odnosno svaki čovjek je zaseban pojedinac te njegovi rezultati ne ovise o razultatima drugog pojedinca. Normalnost podataka smo ispitali histogramima, qqplotovima i statističkim testovima.
+Kako bismo mogli provoditi t-test uzorci moraju biti nezavisni i dolaziti iz normalne distribucije. Nezavisnost možemo utvrditi sa sigurnošću pošto je svaki ispitanik neovisan o drugom, odnosno svaki čovjek je zaseban pojedinac te njegovi rezultati ne ovise o rezultatima drugog pojedinca. Normalnost podataka smo ispitali histogramima, qqplotovima i statističkim testovima.
 
-Koristim T test i pretpostavljam nezavisnost varijabli i različitost varijanci.
+Koristimo t-test i pretpostavljamo nezavisnost varijabli i nejednakost varijanci.
 
 Hipoteze:
 
@@ -604,51 +635,75 @@ t.test(female_subjects$neuroticism_score ,male_subjects$neuroticism_score, alt =
 
 ```
 p-vrijednost je manja od 0.05, stoga se hipoteza \( H_0: \mu_{Female} = \mu_{Male} \) odbacuje u korist alternativne hipoteze \(H_1: \mu_{female} > \mu_{Male}  \)
-Na temelju ovoga možemo zaključiti da je srenjda vrijednost neuroticizma za žene veća u odnosu na srednju vrijednost neuroticizma za muškarce. Ovo nam daje tračak nade da bi možda iz velikog skupa podataka možda mogli naučiti logistički model regresije da na temelju - Neuroticism_score,
-                                         - Agreeableness_score,
-                                         - Conscientiousness_score,
-                                         - Extraversion_score,
-                                         - Openness_score  uspijemo predvidjeti spol ispitanika. Stoga ćemo ispitati da li je to ostvarivo:
 
-## Model logističe regresije za klasifikaciju spola ispitanika
 
-Kako bi dobili binarnu varijablu za spol prilagodit ćemo varijablu tako da ćemo s 0 predstavljati muški spola, a s 1 ženski.
+Osim neurotizicma za koji smo statističkim testiranjem utvrdili da se razlikuje između spolova, osobina koja bi se potencijalno također mogla pokazati kao razlikovni faktor između spolova jest ugodnost (https://www.frontiersin.org/articles/10.3389/fpsyg.2011.00178/full).
+Možemo grafički prikazati ovisnost tih dviju varijabli te istaknuti razliku u spolovima.
+
 ```{r}
-data = bigfive
-data$sex = data$sex -1
+bigfive1 = bigfive[sample(nrow(bigfive),2000),]
+
+plot(bigfive1$agreeable_score, bigfive1$neuroticism_score )
+
+plot(bigfive1[bigfive1$sex == 1,]$agreeable_score, bigfive1[bigfive1$sex == 1,]$neuroticism_score, col = "blue")
+
+points(bigfive1[bigfive1$sex == 2,]$agreeable_score, bigfive1[bigfive1$sex == 2,]$neuroticism_score, col = "red")
+```
+Iz scatter plota možemo uočiti razliku u osobinama između muškog i ženskog spola, odnosno da žene generalno postižu veći score na neuroticizmu i ugodnosti.
+
+Ovo nam daje tračak nade da bismo možda iz velikog skupa podataka mogli kreirati logistički model regresije pomoću kojega ćemo pomoću varijabli neuroticism_score i agreeableness_score pokušati predvidjeti kojeg je spola ispitanik.
+
+## Model logističke regresije za klasifikaciju spola ispitanika
+```{r}
+require(ISLR)
 ```
 
-```{r,  out.width= "65%"}
-require(caret)
+Kako bismo dobili binarnu varijablu za spol prilagodit ćemo varijablu spola tako da 0 predstavlja muški, a 1 ženski spol.
+```{r}
+data = bigfive
+data$sex = data$sex - 1
+```
 
-model = glm(sex ~ agreeable_score + extraversion_score + openness_score + conscientiousness_score + neuroticism_score, data = data, family = binomial())
+```{r}
+model <- glm(sex ~ neuroticism_score + agreeable_score, data = data, family = binomial)
 summary(model)
-
 Rsq = 1 - model$deviance/model$null.deviance
 Rsq
 ```
-Možemo uočiti da svaki score podjednako signifikantan, te provodimo analizu modela.
+Iz rezultata modela možemo uočiti da su svi koeficijenti statistički signifikantni uz bilo koju razinu značajnosti. Usporedbom devijanci null-modela i našeg modela pomoću $R^2$ možemo zaključiti da je naš model bolji, ali ne pretjerano dobar.
 
-```{r analiza modela,  out.width= "65%"}
-
+U procjeni kvalitete modela koristit ćemo i tzv. matricu zabune iz koje ćemo očitati kolika je točnost našeg modela.
+```{r}
 yHat <- model$fitted.values > 0.5
 tab <- table(data$sex, yHat)
-
 tab
-
 accuracy = sum(diag(tab)) / sum(tab)
-precision = tab[2,2] / sum(tab[,2])
-recall = tab[2,2] / sum(tab[2,])
-specificity = tab[1,1] / sum(tab[,1])
-
 accuracy
-precision
-recall
-specificity
-
 ```
-Model daje točnost od 0.6883763, što je bolje od slučajnog pogađanja spola. Međutim ne možemo tvrditi sa velikom vjerojatnosti da na temelju samo rezultata ispitivanja možemo predvidjeti spol. 
+Vidimo da je udio točno klasificiranih primjera oko 67%.
 
-# Zaključak
+Možemo pokušati u model uvrstiti i preostale ulazne varijable našeg dataseta kako bismo dobili kvalitetniji model.
+```{r}
+model1 = glm(sex ~ agreeable_score + extraversion_score + openness_score + conscientiousness_score + neuroticism_score + age, data = data, family = binomial())
+summary(model)
+Rsq = 1 - model1$deviance/model$null.deviance
+Rsq
+```
+Možemo uočiti da je svaki score ponovno signifikantan, dok je varijabla age uz razinu značajnosti od 5% statistički nesignifikantna. Vidimo da se $R^2$ povećao u odnosu na prvotni model što je pozitivno, a daljnjom analizom utvrdit ćemo je li kvalitetniji.
 
-Pitali smo se jesu li stanovnici istočne Azije savjesniji od ostatka svijeta, nakon provedenog istraživanja nismo se uspjeli uvjeriti u to. Dodatno smo se pitali postoji li uopće razlika u savjesnosti između regija. Za primjer smo odabrali tri regije sa sličnim brojem uzoraka i proveli ANOVA test. Odbacili smo hipotezu da su razine savjesnosti jednake u korist alternative da nisu i uvjerili smo se da postoje razlike između regija.
+```{r analiza modela}
+yHat <- model$fitted.values > 0.5
+tab <- table(data$sex, yHat)
+tab
+accuracy = sum(diag(tab)) / sum(tab)
+accuracy
+```
+Model daje točnost od oko 69% što je svakako bolje od slučajnog pogađanja spola, ali i povećanje u odnosu na prvotni model pa naslućujemo da je ovaj model kvalitetniji. To ćemo provjeriti tako što ćemo testirati devijance ova dva modela.
+```{r}
+anova(model, model1, test = "LRT")
+```
+Likelihood ratio test (LRT) pokazao je da postoji značajna razlika u devijancama te možemo zaključiti kako uz dodatne preostale faktore, naš model ima veću kvalitetu. 
+Međutim, ono što ne možemo je tvrditi da sa velikom vjerojatnosti na temelju samo rezultata faktora možemo predvidjeti spol.
+
+
+
